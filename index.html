@@ -119,16 +119,29 @@
 
     /* ══════════════ MUTE BUTTON ══════════════ */
     .mute-btn {
-      position:fixed; top:16px; right:16px; z-index:600;
-      width:40px; height:40px; border-radius:50%;
-      background:rgba(6,14,32,.85); border:1px solid rgba(251,191,36,.3);
+      position:fixed; top:20px; right:16px; z-index:9999;
+      width:44px; height:44px; border-radius:50%;
+      background:rgba(13,30,64,.95); border:1.5px solid rgba(251,191,36,.4);
       backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
       display:flex; align-items:center; justify-content:center;
       cursor:pointer; font-size:18px; transition:all .2s;
-      box-shadow:0 4px 16px rgba(0,0,0,.3);
+      box-shadow:0 6px 20px rgba(0,0,0,.5);
+      color:white; padding:0; line-height:1;
     }
-    .mute-btn:hover { background:rgba(13,30,64,.95); border-color:rgba(251,191,36,.5); }
-    .mute-btn.muted { opacity:.6; }
+    .mute-btn:hover { background:rgba(13,30,64,1); border-color:rgba(251,191,36,.7); transform:scale(1.05); }
+    .mute-btn:active { transform:scale(.95); }
+    .mute-btn.muted { opacity:.7; }
+    .mute-btn.pulse {
+      animation: mutePulse 2s ease-in-out infinite;
+    }
+    @keyframes mutePulse {
+      0%,100% { box-shadow:0 6px 20px rgba(0,0,0,.5), 0 0 0 0 rgba(251,191,36,.5); }
+      50% { box-shadow:0 6px 20px rgba(0,0,0,.5), 0 0 0 12px rgba(251,191,36,0); }
+    }
+    /* safe area for notch */
+    @supports (top: env(safe-area-inset-top)) {
+      .mute-btn { top: calc(env(safe-area-inset-top, 0px) + 16px); }
+    }
 
     .hero-bismillah {
       font-size:22px; color:var(--gold-lt); opacity:.85;
@@ -505,12 +518,13 @@
 <body>
 
 <!-- AUDIO BACKSOUND -->
-<audio id="bgm" loop preload="auto">
+<audio id="bgm" loop preload="auto" playsinline webkit-playsinline>
   <source src="uhayyikum.mp3" type="audio/mpeg">
+  <source src="uhayyikum.mp3" type="audio/mp3">
 </audio>
 
-<!-- MUTE BUTTON (tampil setelah buka undangan) -->
-<button class="mute-btn" id="mute-btn" style="display:none" onclick="toggleMute()" title="Mute/Unmute">
+<!-- MUTE BUTTON (selalu visible setelah load) -->
+<button class="mute-btn" id="mute-btn" onclick="toggleMute()" title="Putar/Mute musik">
   🔊
 </button>
 
@@ -1292,38 +1306,32 @@ function showToast(msg,dur=3000){
 //  AUDIO
 // ═══════════════════════════════════════════
 let isMuted = false;
-let bgmReady = false;
+let bgmStarted = false;
 
 function playBGM() {
   const bgm = $('bgm');
-  bgm.volume = 0.45;
-  bgm.currentTime = 0;
+  const btn = $('mute-btn');
 
-  const attempt = bgm.play();
-  if (attempt !== undefined) {
-    attempt
+  bgm.volume = 0.45;
+  bgm.muted = false;
+
+  const playPromise = bgm.play();
+
+  if (playPromise !== undefined) {
+    playPromise
       .then(() => {
-        bgmReady = true;
-        $('mute-btn').style.display = 'flex';
+        bgmStarted = true;
+        isMuted = false;
+        btn.textContent = '🔊';
+        btn.classList.remove('muted', 'pulse');
+        console.log('[Audio] Playing successfully');
       })
       .catch(err => {
-        // Fallback: coba lagi setelah interaksi berikutnya
-        console.warn('Audio play blocked:', err);
-        $('mute-btn').style.display = 'flex';
-        $('mute-btn').textContent = '▶️';
-        $('mute-btn').title = 'Tap untuk play musik';
-        $('mute-btn').onclick = function() {
-          bgm.play().then(() => {
-            bgmReady = true;
-            isMuted = false;
-            $('mute-btn').textContent = '🔊';
-            $('mute-btn').title = 'Mute/Unmute';
-            $('mute-btn').onclick = toggleMute;
-          }).catch(()=>{});
-        };
+        // Browser blokir → tombol kedip menarik perhatian
+        console.warn('[Audio] Autoplay blocked, waiting for user tap:', err);
+        btn.textContent = '🎵';
+        btn.classList.add('pulse');
       });
-  } else {
-    $('mute-btn').style.display = 'flex';
   }
 }
 
@@ -1331,17 +1339,25 @@ function toggleMute() {
   const bgm = $('bgm');
   const btn = $('mute-btn');
 
-  // Jika audio belum pernah play (karena diblokir browser)
-  if (!bgmReady) {
-    bgm.play().then(() => {
-      bgmReady = true;
-      isMuted = false;
-      btn.textContent = '🔊';
-      btn.classList.remove('muted');
-    }).catch(()=>{});
+  // Belum pernah play → coba play sekarang
+  if (!bgmStarted) {
+    bgm.volume = 0.45;
+    bgm.muted = false;
+    bgm.play()
+      .then(() => {
+        bgmStarted = true;
+        isMuted = false;
+        btn.textContent = '🔊';
+        btn.classList.remove('muted', 'pulse');
+      })
+      .catch(err => {
+        console.error('[Audio] Play failed:', err);
+        showToast('⚠️ Browser memblokir audio. Coba refresh halaman.', 3500);
+      });
     return;
   }
 
+  // Sudah play → toggle mute
   isMuted = !isMuted;
   bgm.muted = isMuted;
   btn.textContent = isMuted ? '🔇' : '🔊';
