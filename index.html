@@ -119,28 +119,35 @@
 
     /* ══════════════ MUTE BUTTON ══════════════ */
     .mute-btn {
-      position:fixed; top:20px; right:16px; z-index:9999;
-      width:44px; height:44px; border-radius:50%;
-      background:rgba(13,30,64,.95); border:1.5px solid rgba(251,191,36,.4);
-      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+      position:fixed; top:16px; right:16px; z-index:99999;
+      display:flex; align-items:center; gap:7px;
+      background:rgba(13,30,64,.95); border:1.5px solid rgba(251,191,36,.35);
+      border-radius:10px; padding:8px 13px;
+      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      cursor:pointer; transition:all .2s;
+      box-shadow:0 4px 18px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.07);
+      color:white; font-family:'Plus Jakarta Sans',sans-serif;
+    }
+    .mute-btn:hover { background:rgba(19,42,80,.98); border-color:rgba(251,191,36,.6); transform:translateY(-1px); box-shadow:0 6px 22px rgba(0,0,0,.6); }
+    .mute-btn:active { transform:scale(.97); }
+    .mute-btn .mb-icon {
+      width:18px; height:18px; flex-shrink:0;
       display:flex; align-items:center; justify-content:center;
-      cursor:pointer; font-size:18px; transition:all .2s;
-      box-shadow:0 6px 20px rgba(0,0,0,.5);
-      color:white; padding:0; line-height:1;
     }
-    .mute-btn:hover { background:rgba(13,30,64,1); border-color:rgba(251,191,36,.7); transform:scale(1.05); }
-    .mute-btn:active { transform:scale(.95); }
-    .mute-btn.muted { opacity:.7; }
-    .mute-btn.pulse {
-      animation: mutePulse 2s ease-in-out infinite;
+    .mute-btn .mb-icon svg { width:18px; height:18px; }
+    .mute-btn .mb-label {
+      font-size:11px; font-weight:700; letter-spacing:.5px;
+      color:rgba(251,191,36,.9); white-space:nowrap;
     }
+    .mute-btn.muted { border-color:rgba(255,255,255,.15); }
+    .mute-btn.muted .mb-label { color:rgba(255,255,255,.4); }
+    .mute-btn.pulse { animation:mutePulse 2s ease-in-out infinite; }
     @keyframes mutePulse {
-      0%,100% { box-shadow:0 6px 20px rgba(0,0,0,.5), 0 0 0 0 rgba(251,191,36,.5); }
-      50% { box-shadow:0 6px 20px rgba(0,0,0,.5), 0 0 0 12px rgba(251,191,36,0); }
+      0%,100%{ box-shadow:0 4px 18px rgba(0,0,0,.55),0 0 0 0 rgba(251,191,36,.4); }
+      50%    { box-shadow:0 4px 18px rgba(0,0,0,.55),0 0 0 8px rgba(251,191,36,0); }
     }
-    /* safe area for notch */
     @supports (top: env(safe-area-inset-top)) {
-      .mute-btn { top: calc(env(safe-area-inset-top, 0px) + 16px); }
+      .mute-btn { top: calc(env(safe-area-inset-top, 0px) + 12px); }
     }
 
     .hero-bismillah {
@@ -445,7 +452,8 @@
 
     /* ══════════════ TUTORIAL TAB ══════════════ */
     .yt-wrap {
-      width:100%; aspect-ratio:16/9; border-radius:var(--r-lg); overflow:hidden;
+      width:100%; max-width:340px; margin:0 auto;
+      aspect-ratio:9/16; border-radius:var(--r-lg); overflow:hidden;
       border:1px solid rgba(251,191,36,.2); background:rgba(0,0,0,.3);
     }
     .yt-wrap iframe { width:100%; height:100%; border:none; }
@@ -518,14 +526,27 @@
 <body>
 
 <!-- AUDIO BACKSOUND -->
-<audio id="bgm" loop preload="auto" playsinline webkit-playsinline>
+<audio id="bgm" loop preload="auto" playsinline webkit-playsinline x5-playsinline>
   <source src="uhayyikum.mp3" type="audio/mpeg">
-  <source src="uhayyikum.mp3" type="audio/mp3">
 </audio>
 
-<!-- MUTE BUTTON (selalu visible setelah load) -->
-<button class="mute-btn" id="mute-btn" onclick="toggleMute()" title="Putar/Mute musik">
-  🔊
+<!-- MUTE BUTTON -->
+<button class="mute-btn" id="mute-btn" onclick="toggleMute()" title="Putar/Mute musik" aria-label="Toggle musik">
+  <span class="mb-icon" id="mb-icon">
+    <!-- icon volume on -->
+    <svg id="icon-on" viewBox="0 0 24 24" fill="none" stroke="rgba(251,191,36,1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    </svg>
+    <!-- icon volume off (hidden by default) -->
+    <svg id="icon-off" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <line x1="23" y1="9" x2="17" y2="15"/>
+      <line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+  </span>
+  <span class="mb-label" id="mb-label">Musik</span>
 </button>
 
 <!-- PARTICLES -->
@@ -889,13 +910,15 @@
       </div>
       <div class="card">
         <div class="card-lbl">Video Panduan</div>
-        <!-- Ganti YOUR_YOUTUBE_ID dengan ID video YouTube -->
-        <div class="yt-placeholder" id="yt-placeholder">
-          <span>▶️</span>
-          <span>Video tutorial segera tersedia</span>
+        <div class="yt-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/d85GcjRodyA"
+            title="Tutorial Kedatangan Wisuda Akbar AL-WILDAN 2026"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
         </div>
-        <!-- Uncomment baris di bawah & isi YouTube video ID saat siap -->
-        <div class="yt-wrap"><iframe src="https://youtube.com/shorts/d85GcjRodyA?feature=share" allowfullscreen></iframe></div>
       </div>
       <div class="card">
         <div class="card-lbl">Petunjuk Singkat</div>
@@ -1308,60 +1331,58 @@ function showToast(msg,dur=3000){
 let isMuted = false;
 let bgmStarted = false;
 
+function setMuteUI(muted) {
+  $('icon-on').style.display  = muted ? 'none'  : 'block';
+  $('icon-off').style.display = muted ? 'block' : 'none';
+  $('mb-label').textContent   = muted ? 'Muted' : 'Musik';
+  $('mute-btn').classList.toggle('muted', muted);
+  $('mute-btn').classList.remove('pulse');
+}
+
+function setWaitUI() {
+  $('icon-on').style.display  = 'block';
+  $('icon-off').style.display = 'none';
+  $('mb-label').textContent   = 'Tap Play';
+  $('mute-btn').classList.add('pulse');
+}
+
 function playBGM() {
   const bgm = $('bgm');
-  const btn = $('mute-btn');
-
   bgm.volume = 0.45;
-  bgm.muted = false;
+  bgm.muted  = false;
 
-  const playPromise = bgm.play();
-
-  if (playPromise !== undefined) {
-    playPromise
-      .then(() => {
-        bgmStarted = true;
-        isMuted = false;
-        btn.textContent = '🔊';
-        btn.classList.remove('muted', 'pulse');
-        console.log('[Audio] Playing successfully');
-      })
-      .catch(err => {
-        // Browser blokir → tombol kedip menarik perhatian
-        console.warn('[Audio] Autoplay blocked, waiting for user tap:', err);
-        btn.textContent = '🎵';
-        btn.classList.add('pulse');
-      });
+  const p = bgm.play();
+  if (p !== undefined) {
+    p.then(() => {
+      bgmStarted = true;
+      setMuteUI(false);
+    }).catch(() => {
+      // Browser blokir — tunggu tap user
+      setWaitUI();
+    });
   }
 }
 
 function toggleMute() {
   const bgm = $('bgm');
-  const btn = $('mute-btn');
 
-  // Belum pernah play → coba play sekarang
   if (!bgmStarted) {
     bgm.volume = 0.45;
-    bgm.muted = false;
-    bgm.play()
-      .then(() => {
-        bgmStarted = true;
-        isMuted = false;
-        btn.textContent = '🔊';
-        btn.classList.remove('muted', 'pulse');
-      })
-      .catch(err => {
-        console.error('[Audio] Play failed:', err);
-        showToast('⚠️ Browser memblokir audio. Coba refresh halaman.', 3500);
-      });
+    bgm.muted  = false;
+    bgm.play().then(() => {
+      bgmStarted = true;
+      isMuted    = false;
+      setMuteUI(false);
+    }).catch(() => {
+      setWaitUI();
+      showToast('Gagal memutar musik. Coba refresh halaman.', 3000);
+    });
     return;
   }
 
-  // Sudah play → toggle mute
   isMuted = !isMuted;
   bgm.muted = isMuted;
-  btn.textContent = isMuted ? '🔇' : '🔊';
-  btn.classList.toggle('muted', isMuted);
+  setMuteUI(isMuted);
 }
 
 // ═══════════════════════════════════════════
