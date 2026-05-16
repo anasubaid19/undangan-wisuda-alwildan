@@ -1395,7 +1395,7 @@ let bgmStarted = false;
 function setMuteUI(muted) {
   $('icon-on').style.display  = muted ? 'none'  : 'block';
   $('icon-off').style.display = muted ? 'block' : 'none';
-  $('mb-label').textContent   = muted ? 'Muted' : 'Musik';
+  $('mb-label').textContent   = muted ? 'Muted' : 'Audio';
   $('mute-btn').classList.toggle('muted', muted);
   $('mute-btn').classList.remove('pulse');
 }
