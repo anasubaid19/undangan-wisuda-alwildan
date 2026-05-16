@@ -174,6 +174,13 @@
       background:rgba(251,191,36,.07); border-radius:999px; padding:5px 14px;
       border:1px solid rgba(251,191,36,.15);
     }
+    .hero-warning {
+      display:flex; align-items:center; gap:7px;
+      font-size:11px; color:rgba(255,255,255,.6); font-weight:600;
+      background:rgba(239,68,68,.07); border-radius:999px; padding:6px 14px;
+      border:1px solid rgba(239,68,68,.2); line-height:1.4; text-align:center;
+    }
+    .hero-warning svg { flex-shrink:0; stroke:rgba(239,68,68,.8); }
     .hero-btn {
       margin-top:8px; padding:16px 40px;
       background:linear-gradient(135deg,var(--gold-dk),var(--gold));
@@ -560,7 +567,7 @@
       <line x1="17" y1="9" x2="23" y2="15"/>
     </svg>
   </span>
-  <span class="mb-label" id="mb-label">Audio</span>
+  <span class="mb-label" id="mb-label">Musik</span>
 </button>
 
 <!-- PARTICLES -->
@@ -599,6 +606,10 @@
       <p>ORANG TUA / WALI<br>WISUDAWAN</p>
     </div>
     <div class="hero-note">✦ Undangan berlaku untuk 3 orang: 1 Wisudawan & 2 Orang Tua/Wali ✦</div>
+    <div class="hero-warning">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Demi kenyamanan bersama, kami mengimbau untuk tidak membawa anak kecil
+    </div>
     <button class="hero-btn" onclick="bukaUndangan()">
       <span>Buka Undangan</span>
       <span>›</span>
@@ -630,7 +641,7 @@
       <span>Konfirmasi</span>
     </button>
 
-    <!-- Denah — icon kursi -->
+    <!-- Kursi — icon kursi -->
     <button class="tab-btn" onclick="switchTab('denah')" id="tab-btn-denah">
       <span class="ti">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -639,7 +650,7 @@
           <line x1="5" y1="18" x2="5" y2="21"/><line x1="19" y1="18" x2="19" y2="21"/>
         </svg>
       </span>
-      <span>Denah</span>
+      <span>Kursi</span>
     </button>
 
     <!-- Lokasi -->
@@ -890,7 +901,7 @@
           <div class="grid-title">👨👩 Zona Orang Tua</div>
           <div class="grid-pos" id="ortu-pos">—</div>
         </div>
-        <div class="grid-hint">👨 Ayah: Sisi Kiri · 👩 Ibu: Sisi Kanan · Geser untuk scroll</div>
+        <div class="grid-hint">👨 Ayah: Sisi Kiri · 🧕 Ibu: Sisi Kanan · Geser untuk scroll</div>
         <div class="svg-scroll" id="scroll-ortu"></div>
       </div>
       <div class="foot">&copy; 2026 <a href="#">AL-WILDAN Islamic School</a></div>
@@ -1334,7 +1345,7 @@ function buildOrtuSVG(hari,hlSeat){
   const hY1=16,hY2=30;
   s+=`<text x="${PAD+zoneW/2}" y="${hY1}" text-anchor="middle" fill="${C_AYAH}" font-size="11" font-family="Plus Jakarta Sans,sans-serif" font-weight="800">👨 AYAH</text>`;
   s+=`<text x="${PAD+zoneW/2}" y="${hY2}" text-anchor="middle" fill="${C_AYAH}" font-size="8" font-family="Plus Jakarta Sans,sans-serif" font-weight="600" opacity=".85">Sisi Kiri Panggung</text>`;
-  s+=`<text x="${xIB+zoneW/2}" y="${hY1}" text-anchor="middle" fill="${C_IBU}" font-size="11" font-family="Plus Jakarta Sans,sans-serif" font-weight="800">👩 IBU</text>`;
+  s+=`<text x="${xIB+zoneW/2}" y="${hY1}" text-anchor="middle" fill="${C_IBU}" font-size="11" font-family="Plus Jakarta Sans,sans-serif" font-weight="800">🧕 IBU</text>`;
   s+=`<text x="${xIB+zoneW/2}" y="${hY2}" text-anchor="middle" fill="${C_IBU}" font-size="8" font-family="Plus Jakarta Sans,sans-serif" font-weight="600" opacity=".85">Sisi Kanan Panggung</text>`;
   const bl=(x,label,color)=>`<text x="${x+PCOLS*U/2}" y="${hY2}" text-anchor="middle" fill="${color}" font-size="7.5" font-family="Plus Jakarta Sans,sans-serif" font-weight="700" opacity=".6">BLOK ${label}</text>`;
   s+=bl(xAD,'D',C_AYAH)+bl(xAC,'C',C_AYAH)+bl(xIB,'B',C_IBU)+bl(xIA,'A',C_IBU);
@@ -1395,7 +1406,7 @@ let bgmStarted = false;
 function setMuteUI(muted) {
   $('icon-on').style.display  = muted ? 'none'  : 'block';
   $('icon-off').style.display = muted ? 'block' : 'none';
-  $('mb-label').textContent   = muted ? 'Muted' : 'Audio';
+  $('mb-label').textContent   = muted ? 'Muted' : 'Musik';
   $('mute-btn').classList.toggle('muted', muted);
   $('mute-btn').classList.remove('pulse');
 }
