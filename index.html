@@ -567,7 +567,7 @@
       <line x1="17" y1="9" x2="23" y2="15"/>
     </svg>
   </span>
-  <span class="mb-label" id="mb-label">Musik</span>
+  <span class="mb-label" id="mb-label">Audio</span>
 </button>
 
 <!-- PARTICLES -->
@@ -1406,7 +1406,7 @@ let bgmStarted = false;
 function setMuteUI(muted) {
   $('icon-on').style.display  = muted ? 'none'  : 'block';
   $('icon-off').style.display = muted ? 'block' : 'none';
-  $('mb-label').textContent   = muted ? 'Muted' : 'Musik';
+  $('mb-label').textContent   = muted ? 'Muted' : 'Audio';
   $('mute-btn').classList.toggle('muted', muted);
   $('mute-btn').classList.remove('pulse');
 }
