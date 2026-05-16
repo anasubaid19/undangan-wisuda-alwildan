@@ -104,19 +104,31 @@
 
     .hero-logos { display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:4px; }
     .hero-logo-circle {
-      width:72px; height:72px; border-radius:50%;
-      background:rgba(251,191,36,.12); border:2px solid rgba(251,191,36,.35);
+      width:80px; height:80px; border-radius:50%;
+      background:rgba(251,191,36,.08); border:2px solid rgba(251,191,36,.3);
       display:flex; align-items:center; justify-content:center;
-      font-size:28px; box-shadow:0 0 24px rgba(251,191,36,.2);
+      box-shadow:0 0 24px rgba(251,191,36,.15); overflow:hidden; padding:4px;
     }
+    .hero-logo-circle img { width:100%; height:100%; object-fit:contain; border-radius:50%; }
     .hero-ang-badge {
-      background:linear-gradient(135deg,var(--gold-dk),var(--gold));
-      border-radius:50%; width:72px; height:72px;
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      box-shadow:0 0 28px rgba(251,191,36,.4); border:2px solid rgba(251,191,36,.5);
+      width:80px; height:80px; border-radius:50%;
+      border:2px solid rgba(251,191,36,.4);
+      box-shadow:0 0 28px rgba(251,191,36,.35); overflow:hidden;
     }
-    .hero-ang-badge span:first-child { font-size:8px; font-weight:700; letter-spacing:1.5px; color:var(--navy); text-transform:uppercase; }
-    .hero-ang-badge span:last-child { font-size:26px; font-weight:900; color:var(--navy); line-height:1; }
+    .hero-ang-badge img { width:100%; height:100%; object-fit:contain; }
+
+    /* ══════════════ MUTE BUTTON ══════════════ */
+    .mute-btn {
+      position:fixed; top:16px; right:16px; z-index:600;
+      width:40px; height:40px; border-radius:50%;
+      background:rgba(6,14,32,.85); border:1px solid rgba(251,191,36,.3);
+      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; font-size:18px; transition:all .2s;
+      box-shadow:0 4px 16px rgba(0,0,0,.3);
+    }
+    .mute-btn:hover { background:rgba(13,30,64,.95); border-color:rgba(251,191,36,.5); }
+    .mute-btn.muted { opacity:.6; }
 
     .hero-bismillah {
       font-size:22px; color:var(--gold-lt); opacity:.85;
@@ -492,6 +504,14 @@
 </head>
 <body>
 
+<!-- AUDIO BACKSOUND -->
+<audio id="bgm" src="uhayyikum.mp3" loop preload="auto"></audio>
+
+<!-- MUTE BUTTON (tampil setelah buka undangan) -->
+<button class="mute-btn" id="mute-btn" style="display:none" onclick="toggleMute()" title="Mute/Unmute">
+  🔊
+</button>
+
 <!-- PARTICLES -->
 <div id="particles"></div>
 
@@ -511,10 +531,11 @@
 <div id="page-hero">
   <div class="hero-inner">
     <div class="hero-logos">
-      <div class="hero-logo-circle">🎓</div>
+      <div class="hero-logo-circle">
+        <img src="logoalwildan.png" alt="AL-WILDAN Islamic School">
+      </div>
       <div class="hero-ang-badge">
-        <span>ANGKATAN</span>
-        <span>12</span>
+        <img src="logo12.png" alt="Angkatan 12">
       </div>
     </div>
     <div class="hero-bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
@@ -1002,6 +1023,12 @@ function bukaUndangan() {
   $('tab-content').style.display='block';
   $('tab-bar').classList.add('visible');
   switchTab('info');
+
+  // Play backsound
+  const bgm = $('bgm');
+  bgm.volume = 0.5;
+  bgm.play().catch(()=>{});
+  $('mute-btn').style.display = 'flex';
 }
 
 function switchTab(name) {
@@ -1262,6 +1289,19 @@ $('btn-dl').addEventListener('click',async()=>{
 function showToast(msg,dur=3000){
   $('toast').textContent=msg;$('toast').classList.add('on');
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('on'),dur);
+}
+
+// ═══════════════════════════════════════════
+//  AUDIO
+// ═══════════════════════════════════════════
+let isMuted = false;
+function toggleMute() {
+  const bgm = $('bgm');
+  const btn = $('mute-btn');
+  isMuted = !isMuted;
+  bgm.muted = isMuted;
+  btn.textContent = isMuted ? '🔇' : '🔊';
+  btn.classList.toggle('muted', isMuted);
 }
 
 // ═══════════════════════════════════════════
