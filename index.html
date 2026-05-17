@@ -459,15 +459,50 @@
       font-family:'Plus Jakarta Sans',sans-serif; transition:background .2s, border-color .2s;
     }
     .btn-rundown:hover { background:rgba(251,191,36,.1); border-color:rgba(251,191,36,.35); }
+    .btn-rundown:active { transform:scale(.98); }
     .btn-rundown-left { text-align:left; }
     .btn-rundown-left strong { font-size:16px; font-weight:800; color:var(--gold); display:block; margin-bottom:4px; }
     .btn-rundown-left span { font-size:12px; color:rgba(255,255,255,.6); }
-    .btn-rundown-ic { font-size:22px; opacity:.5; }
-    .rundown-soon {
-      text-align:center; padding:32px 20px;
-      color:rgba(255,255,255,.3); font-size:13px; font-weight:500;
+    .btn-rundown-ic { font-size:22px; color:rgba(251,191,36,.5); flex-shrink:0; }
+
+    /* ══════════════ RUNDOWN MODAL ══════════════ */
+    .ov-rundown {
+      position:fixed; inset:0; z-index:9200;
+      background:rgba(0,0,0,.88);
+      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:16px;
+      opacity:0; pointer-events:none; transition:opacity .25s ease;
     }
-    .rundown-soon .rs-ic { font-size:36px; display:block; margin-bottom:10px; opacity:.4; }
+    .ov-rundown.on { opacity:1; pointer-events:all; }
+    .rundown-modal-inner {
+      width:100%; max-width:560px; max-height:90svh;
+      display:flex; flex-direction:column; gap:12px;
+      transform:translateY(20px) scale(.97);
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    .ov-rundown.on .rundown-modal-inner { transform:none; }
+    .rundown-modal-hdr {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 4px;
+    }
+    .rundown-modal-title { font-size:15px; font-weight:800; color:var(--gold); }
+    .rundown-modal-close {
+      width:36px; height:36px; border-radius:50%;
+      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; color:rgba(255,255,255,.7); font-size:18px;
+      transition:background .2s; flex-shrink:0;
+    }
+    .rundown-modal-close:hover { background:rgba(255,255,255,.2); }
+    .rundown-modal-img-wrap {
+      width:100%; overflow-y:auto; border-radius:var(--r-lg);
+      background:#fff; -webkit-overflow-scrolling:touch;
+      max-height:calc(90svh - 60px);
+    }
+    .rundown-modal-img-wrap img {
+      width:100%; display:block; border-radius:var(--r-lg);
+    }
 
     /* ══════════════ TUTORIAL TAB ══════════════ */
     .yt-wrap {
@@ -567,7 +602,7 @@
       <line x1="17" y1="9" x2="23" y2="15"/>
     </svg>
   </span>
-  <span class="mb-label" id="mb-label">Audio</span>
+  <span class="mb-label" id="mb-label">Musik</span>
 </button>
 
 <!-- PARTICLES -->
@@ -947,24 +982,20 @@
       <div class="card">
         <div class="card-lbl">Pilih Rundown</div>
         <div class="rundown-btns">
-          <button class="btn-rundown" onclick="showToast('📅 Rundown Hari 1 segera tersedia')">
+          <button class="btn-rundown" onclick="openRundown(1)">
             <div class="btn-rundown-left">
               <strong>🎓 Rundown Hari 1</strong>
               <span>Rabu, 17 Juni 2026 — Ikhwan</span>
             </div>
             <span class="btn-rundown-ic">›</span>
           </button>
-          <button class="btn-rundown" onclick="showToast('📅 Rundown Hari 2 segera tersedia')">
+          <button class="btn-rundown" onclick="openRundown(2)">
             <div class="btn-rundown-left">
               <strong>🎓 Rundown Hari 2</strong>
               <span>Kamis, 18 Juni 2026 — Akhwat</span>
             </div>
             <span class="btn-rundown-ic">›</span>
           </button>
-        </div>
-        <div class="rundown-soon">
-          <span class="rs-ic">📋</span>
-          Rundown detail sedang disiapkan.<br>Akan diperbarui sebelum hari pelaksanaan.
         </div>
       </div>
       <div class="foot">&copy; 2026 <a href="#">AL-WILDAN Islamic School</a></div>
@@ -1007,6 +1038,19 @@
   </div>
 
 </div><!-- end tab-content -->
+
+<!-- MODAL: RUNDOWN -->
+<div class="ov-rundown" id="ov-rundown" onclick="closeRundown(event)">
+  <div class="rundown-modal-inner">
+    <div class="rundown-modal-hdr">
+      <span class="rundown-modal-title" id="rundown-modal-title">Rundown Hari 1</span>
+      <button class="rundown-modal-close" onclick="closeRundown()">✕</button>
+    </div>
+    <div class="rundown-modal-img-wrap">
+      <img id="rundown-modal-img" src="" alt="Rundown">
+    </div>
+  </div>
+</div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
@@ -1398,6 +1442,47 @@ function showToast(msg,dur=3000){
 }
 
 // ═══════════════════════════════════════════
+//  RUNDOWN
+// ═══════════════════════════════════════════
+// Raw GitHub URLs — gambar dipreload saat halaman load
+var RUNDOWN_URLS = {
+  1: 'rundown 1.jpg',
+  2: 'rundown 2.jpg'
+};
+
+// Preload kedua gambar di background saat DOM siap
+var _rundownCache = {};
+function preloadRundown() {
+  [1, 2].forEach(function(n) {
+    var img = new Image();
+    img.src = RUNDOWN_URLS[n];
+    _rundownCache[n] = img;
+  });
+}
+
+function openRundown(n) {
+  var modal = $('ov-rundown');
+  var img   = $('rundown-modal-img');
+  var title = $('rundown-modal-title');
+
+  // Pakai cache → langsung tampil tanpa delay
+  img.src = _rundownCache[n] ? _rundownCache[n].src : RUNDOWN_URLS[n];
+  title.textContent = n === 1
+    ? '📅 Rundown Hari 1 — Ikhwan'
+    : '📅 Rundown Hari 2 — Akhwat';
+
+  modal.classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRundown(e) {
+  // Tutup jika klik backdrop atau tombol ✕
+  if (e && e.target !== $('ov-rundown')) return;
+  $('ov-rundown').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+// ═══════════════════════════════════════════
 //  AUDIO
 // ═══════════════════════════════════════════
 let isMuted = false;
@@ -1406,7 +1491,7 @@ let bgmStarted = false;
 function setMuteUI(muted) {
   $('icon-on').style.display  = muted ? 'none'  : 'block';
   $('icon-off').style.display = muted ? 'block' : 'none';
-  $('mb-label').textContent   = muted ? 'Muted' : 'Audio';
+  $('mb-label').textContent   = muted ? 'Muted' : 'Musik';
   $('mute-btn').classList.toggle('muted', muted);
   $('mute-btn').classList.remove('pulse');
 }
@@ -1470,6 +1555,7 @@ document.querySelectorAll('input,select').forEach(el=>{
 });
 
 // ─ START ─
+preloadRundown();
 initApp();
 </script>
 </body>
