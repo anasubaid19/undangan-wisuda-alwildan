@@ -1518,9 +1518,20 @@ function selectHari(h){
   $('btn-cari').disabled=false;$('inp-kursi').max=MAX_SEAT[h];$('err-msg').classList.remove('on');
   $('inp-nama-denah').disabled=false;
   $('inp-nama-denah').placeholder='Ketik nama wisudawan (Hari '+h+')...';
-  $('inp-kursi').focus();
-  // Reset card-as saat ganti hari
+
+  // Reset field pencarian & hasil saat ganti hari
+  $('inp-nama-denah').value='';
+  $('inp-kursi').value='';
+  closeSugDenah();
+  $('err-msg').classList.remove('on');
+
+  // Sembunyikan hasil pencarian sebelumnya
+  $('info-card-s').classList.remove('on');
+  $('card-wisu').style.display='none';
+  $('card-ortu').style.display='none';
   $('card-as').style.display='none';
+
+  $('inp-kursi').focus();
 }
 
 // Auto-fill nama → nomor kursi (di tab denah)
