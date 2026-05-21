@@ -449,6 +449,135 @@
     }
     .btn-maps:hover { background:rgba(251,191,36,.18); }
 
+    /* ══════════════ ADDITIONAL SEAT ══════════════ */
+    .as-divider{display:flex;align-items:center;gap:10px;margin:10px 0 6px;}
+    .as-divider-line{flex:1;height:1px;background:rgba(251,191,36,.2);}
+    .as-divider-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);padding:0 4px;white-space:nowrap;}
+    .as-kuota-row{display:flex;gap:8px;margin-bottom:10px;}
+    .as-kuota-chip{flex:1;border-radius:var(--r-sm);padding:8px 10px;display:flex;flex-direction:column;gap:3px;}
+    .as-kuota-chip.ayah{background:rgba(5,150,105,.12);border:1px solid rgba(5,150,105,.22);}
+    .as-kuota-chip.ibu{background:rgba(219,39,119,.12);border:1px solid rgba(219,39,119,.22);}
+    .as-kc-lbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+    .as-kuota-chip.ayah .as-kc-lbl{color:#059669;}
+    .as-kuota-chip.ibu  .as-kc-lbl{color:#db2777;}
+    .as-kc-val{font-size:15px;font-weight:900;color:var(--white);line-height:1;}
+    .as-kc-sub{font-size:10px;color:rgba(255,255,255,.4);}
+    .as-kc-bar{width:100%;height:3px;border-radius:999px;background:rgba(255,255,255,.1);margin-top:4px;overflow:hidden;}
+    .as-kc-fill{height:100%;border-radius:999px;}
+    .as-kuota-chip.ayah .as-kc-fill{background:#059669;}
+    .as-kuota-chip.ibu  .as-kc-fill{background:#db2777;}
+    .as-legend-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+    .as-leg{display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(255,255,255,.55);font-weight:600;}
+    .as-leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+    .as-hint{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:6px;}
+    .as-svg-sc{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;border-radius:8px;}
+    .as-svg-sc::-webkit-scrollbar{height:3px;}
+    .as-svg-sc::-webkit-scrollbar-thumb{background:rgba(251,191,36,.3);border-radius:2px;}
+    .as-refresh-row{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:10px;color:rgba(255,255,255,.3);font-weight:600;}
+    .as-rdot{width:5px;height:5px;border-radius:50%;background:#059669;animation:pdot 2s ease-in-out infinite;}
+    .as-tooltip{position:fixed;z-index:9999;background:rgba(13,30,64,.98);border:1px solid rgba(251,191,36,.35);border-radius:10px;padding:9px 13px;font-size:11px;font-weight:600;color:var(--white);pointer-events:none;opacity:0;transition:opacity .15s;box-shadow:0 8px 24px rgba(0,0,0,.5);max-width:190px;line-height:1.6;}
+    .as-tooltip.on{opacity:1;}
+    .as-tooltip strong{color:var(--gold);display:block;margin-bottom:2px;}
+    .btn-pesan{width:100%;margin-top:10px;padding:13px;background:linear-gradient(135deg,var(--gold-dk),var(--gold));border:none;border-radius:var(--r-md);font-family:inherit;font-size:13px;font-weight:800;color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .18s,opacity .18s;box-shadow:0 6px 18px rgba(251,191,36,.22);}
+    .btn-pesan:active{transform:scale(.98);}
+    .btn-pesan.penuh,.btn-pesan.ditutup{background:rgba(100,116,139,.15);border:1.5px solid rgba(100,116,139,.25);color:rgba(100,116,139,.55);cursor:not-allowed;box-shadow:none;}
+
+    /* POPUP */
+    .as-popup{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:9100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+    @media(min-width:540px){.as-popup{align-items:center;padding:20px;}}
+    .as-popup.on{opacity:1;pointer-events:all;}
+    .as-popup-inner{width:100%;max-width:520px;max-height:92svh;background:var(--navy);border-radius:22px 22px 0 0;display:flex;flex-direction:column;overflow:hidden;transform:translateY(40px);transition:transform .35s cubic-bezier(.34,1.2,.64,1);border:1px solid rgba(251,191,36,.12);}
+    @media(min-width:540px){.as-popup-inner{border-radius:22px;transform:scale(.93);}}
+    .as-popup.on .as-popup-inner{transform:none;}
+    .as-popup-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;}
+    .as-popup-title{font-size:15px;font-weight:900;color:var(--gold);}
+    .as-popup-close{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.6);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    .as-popup-body{overflow-y:auto;flex:1;padding:14px 18px 22px;display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch;}
+
+    .as-fg{display:flex;flex-direction:column;gap:5px;}
+    .as-fg label{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px;}
+    .as-fg input,.as-fg select{width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);border-radius:var(--r-md);color:var(--white);font-family:inherit;font-size:15px;font-weight:500;padding:11px 13px;outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none;}
+    .as-fg select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23fbbf24' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;cursor:pointer;}
+    .as-fg select option{background:#0d1e40;}
+    .as-fg input:focus,.as-fg select:focus{border-color:rgba(251,191,36,.5);background:rgba(255,255,255,.1);}
+    .as-fg input::placeholder{color:rgba(255,255,255,.22);}
+    .as-fg input.as-autofilled{border-color:rgba(5,150,105,.5)!important;background:rgba(5,150,105,.07)!important;}
+    .as-fg input.bad,.as-fg select.bad{border-color:rgba(239,68,68,.5)!important;}
+    .as-err{font-size:11px;color:#fca5a5;display:none;margin-top:2px;}
+    .as-err.on{display:block;}
+    .as-ac-wrap{position:relative;}
+    .as-sug{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#0a1628;border:1px solid rgba(251,191,36,.2);border-radius:var(--r-md);z-index:9500;display:none;box-shadow:0 16px 36px rgba(0,0,0,.8);max-height:170px;overflow-y:auto;}
+    .as-sug.on{display:block;}
+    .as-sug-item{padding:9px 13px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);}
+    .as-sug-item:last-child{border-bottom:none;}
+    .as-sug-item:hover,.as-sug-item:active{background:rgba(251,191,36,.09);}
+    .as-sug-name{font-size:13px;font-weight:700;}
+    .as-sug-meta{font-size:10px;color:rgba(255,255,255,.38);margin-top:1px;}
+    .as-sug-empty{padding:12px;text-align:center;font-size:12px;color:rgba(255,255,255,.3);}
+    .as-gender-wrap{display:flex;flex-direction:column;gap:7px;}
+    .as-gender-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-sm);padding:9px 12px;}
+    .as-gender-lbl{font-size:12px;font-weight:600;color:rgba(255,255,255,.65);}
+    .as-gender-opts{display:flex;gap:6px;}
+    .as-g-opt{position:relative;}
+    .as-g-opt input[type=radio]{position:absolute;opacity:0;width:0;height:0;}
+    .as-g-opt label{display:flex;align-items:center;gap:4px;padding:5px 11px;border-radius:999px;cursor:pointer;border:1.5px solid rgba(255,255,255,.14);font-size:11px;font-weight:700;color:rgba(255,255,255,.4);transition:all .2s;margin:0;}
+    .as-g-opt input[type=radio]:checked + label.laki{border-color:#059669;background:rgba(5,150,105,.15);color:#059669;}
+    .as-g-opt input[type=radio]:checked + label.perempuan{border-color:#db2777;background:rgba(219,39,119,.15);color:#db2777;}
+    .as-rek-box{background:rgba(251,191,36,.06);border:1.5px solid rgba(251,191,36,.18);border-radius:var(--r-sm);padding:12px;}
+    .as-rek-bank{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:5px;}
+    .as-rek-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .as-rek-num{font-size:19px;font-weight:900;color:var(--gold);}
+    .as-rek-name{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px;}
+    .as-btn-salin{padding:6px 11px;background:rgba(251,191,36,.14);border:1px solid rgba(251,191,36,.28);border-radius:var(--r-sm);font-family:inherit;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:all .2s;}
+    .as-btn-salin.tersalin{background:rgba(5,150,105,.2);border-color:rgba(5,150,105,.4);color:#059669;}
+    .as-total{display:flex;align-items:center;justify-content:space-between;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.16);border-radius:var(--r-sm);padding:11px 13px;}
+    .as-total-lbl{font-size:12px;color:rgba(255,255,255,.5);font-weight:600;}
+    .as-total-val{font-size:17px;font-weight:900;color:var(--gold);}
+    .as-upload-area{border:2px dashed rgba(251,191,36,.2);border-radius:var(--r-md);padding:20px 14px;text-align:center;cursor:pointer;position:relative;transition:all .2s;}
+    .as-upload-area:hover{border-color:rgba(251,191,36,.4);}
+    .as-upload-area.has-file{border-color:rgba(5,150,105,.4);background:rgba(5,150,105,.05);border-style:solid;}
+    .as-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+    .as-upload-ic{font-size:22px;margin-bottom:5px;}
+    .as-upload-txt{font-size:12px;color:rgba(255,255,255,.5);}
+    .as-upload-hint{font-size:10px;color:rgba(255,255,255,.26);margin-top:2px;}
+    .as-upload-fname{font-size:11px;color:#059669;font-weight:700;margin-top:5px;}
+    .as-compress-info{font-size:10px;color:rgba(5,150,105,.65);margin-top:2px;}
+    .as-upload-prog{width:100%;height:3px;background:rgba(255,255,255,.1);border-radius:999px;margin-top:7px;overflow:hidden;display:none;}
+    .as-upload-prog-bar{height:100%;background:linear-gradient(90deg,var(--gold-dk),var(--gold));border-radius:999px;width:0;transition:width .3s;}
+    .as-timer-strip{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.28);border-radius:var(--r-sm);padding:10px 13px;display:none;align-items:center;gap:10px;}
+    .as-timer-strip.on{display:flex;}
+    .as-timer-strip.bahaya{border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.08);}
+    .as-timer-ic{font-size:20px;flex-shrink:0;}
+    .as-timer-lbl{font-size:9px;color:rgba(255,255,255,.4);font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+    .as-timer-val{font-size:24px;font-weight:900;color:#f59e0b;letter-spacing:2px;font-variant-numeric:tabular-nums;line-height:1.1;}
+    .as-timer-strip.bahaya .as-timer-val{color:#ef4444;}
+    .btn-kirim-pesan{width:100%;padding:14px;background:var(--gold);border:none;border-radius:var(--r-lg);font-family:inherit;font-size:14px;font-weight:800;color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .18s,opacity .18s;}
+    .btn-kirim-pesan:active{transform:scale(.98);}
+    .btn-kirim-pesan:disabled{opacity:.38;cursor:not-allowed;transform:none;}
+    .btn-kirim-pesan.loading{opacity:.7;cursor:wait;}
+    .as-btn-spin{width:14px;height:14px;border:2px solid rgba(13,30,64,.25);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;display:none;}
+    .btn-kirim-pesan.loading .as-btn-spin{display:block;}
+    .btn-wa-konfirmasi{width:100%;padding:12px;background:rgba(37,211,102,.13);border:1.5px solid rgba(37,211,102,.28);border-radius:var(--r-md);font-family:inherit;font-size:13px;font-weight:800;color:#25d366;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .as-sukses{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22);border-radius:var(--r-md);padding:18px;text-align:center;display:none;flex-direction:column;gap:8px;align-items:center;}
+    .as-sukses.on{display:flex;}
+    .as-sukses-ic{font-size:38px;}
+    .as-sukses-title{font-size:16px;font-weight:900;color:#059669;}
+    .as-sukses-nomor{background:rgba(251,191,36,.09);border:1px solid rgba(251,191,36,.2);border-radius:var(--r-sm);padding:7px 12px;font-size:11px;color:rgba(255,255,255,.55);width:100%;}
+    .as-sukses-nomor strong{color:var(--gold);font-size:13px;display:block;margin-bottom:1px;}
+    .as-sukses-seats{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+    .as-seat-bdg{padding:4px 11px;border-radius:999px;font-size:11px;font-weight:800;}
+    .as-seat-bdg.ayah{background:rgba(5,150,105,.2);border:1px solid rgba(5,150,105,.4);color:#059669;}
+    .as-seat-bdg.ibu{background:rgba(219,39,119,.2);border:1px solid rgba(219,39,119,.4);color:#db2777;}
+    .as-sukses-msg{font-size:11px;color:rgba(255,255,255,.5);line-height:1.6;}
+    .as-closed-notice{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);border-radius:var(--r-sm);padding:11px 13px;font-size:12px;color:rgba(255,255,255,.55);line-height:1.6;display:none;}
+    .as-closed-notice.on{display:block;}
+    .as-closed-notice strong{color:#fca5a5;display:block;margin-bottom:2px;}
+
+    .as-hari-btn-popup{flex:1;padding:10px 8px;border-radius:var(--r-sm);border:1.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;line-height:1.3;text-align:center;}
+    .as-hari-btn-popup small{display:block;font-size:9px;font-weight:500;opacity:.65;margin-top:2px;}
+    .as-hari-btn-popup.active{border-color:var(--gold);background:rgba(251,191,36,.12);color:var(--gold);}
+    .as-hari-btn-popup:hover:not(.active){border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.8);}
+
     /* ══════════════ RUNDOWN TAB ══════════════ */
     .rundown-btns { display:flex; flex-direction:column; gap:10px; }
     .btn-rundown {
@@ -936,8 +1065,61 @@
           <div class="grid-title">👨👩 Zona Orang Tua</div>
           <div class="grid-pos" id="ortu-pos">—</div>
         </div>
-        <div class="grid-hint">👨 Ayah: Sisi Kiri · 🧕 Ibu: Sisi Kanan · Geser untuk scroll</div>
+        <div class="grid-hint">👨 Ayah: Sisi Kiri · 🧕 Ibu: Sisi Kanan · Geser untuk melihat seluruh denah</div>
         <div class="svg-scroll" id="scroll-ortu"></div>
+
+        <!-- ADDITIONAL SEAT SECTION -->
+        <div style="padding:0 12px 12px">
+          <div class="as-divider">
+            <div class="as-divider-line"></div>
+            <div class="as-divider-lbl">🪑 Kursi Tambahan</div>
+            <div class="as-divider-line"></div>
+          </div>
+
+          <!-- KUOTA -->
+          <div class="as-kuota-row" id="as-kuota-row" style="display:none">
+            <div class="as-kuota-chip ayah">
+              <div class="as-kc-lbl">👨 Ayah</div>
+              <div class="as-kc-val" id="as-sisa-ayah">—</div>
+              <div class="as-kc-sub" id="as-sub-ayah">dari 100 kursi</div>
+              <div class="as-kc-bar"><div class="as-kc-fill" id="as-bar-ayah" style="width:100%"></div></div>
+            </div>
+            <div class="as-kuota-chip ibu">
+              <div class="as-kc-lbl">🧕 Ibu</div>
+              <div class="as-kc-val" id="as-sisa-ibu">—</div>
+              <div class="as-kc-sub" id="as-sub-ibu">dari 100 kursi</div>
+              <div class="as-kc-bar"><div class="as-kc-fill" id="as-bar-ibu" style="width:100%"></div></div>
+            </div>
+          </div>
+
+          <!-- LEGENDA + HINT -->
+          <div class="as-legend-row" id="as-legend-row" style="display:none">
+            <div class="as-leg"><div class="as-leg-dot" style="background:#b8c9de"></div>Tersedia</div>
+            <div class="as-leg"><div class="as-leg-dot" style="background:#ef4444"></div>Sudah Dipesan</div>
+            <div class="as-leg"><div class="as-leg-dot" style="background:#f59e0b"></div>Sedang Direservasi</div>
+          </div>
+          <div class="as-hint" id="as-hint" style="display:none">👆 Sentuh kursi berwarna untuk melihat informasi · Geser untuk melihat seluruh peta</div>
+
+          <!-- SVG PETA -->
+          <div class="as-svg-sc" id="as-svg-sc" style="display:none"></div>
+
+          <!-- REFRESH INDICATOR -->
+          <div class="as-refresh-row" id="as-refresh-row" style="display:none">
+            <div class="as-rdot"></div>
+            <span id="as-refresh-txt">Diperbarui dalam 30 detik</span>
+          </div>
+
+          <!-- TOMBOL PESAN -->
+          <button class="btn-pesan" id="as-btn-pesan" onclick="asBukaPopup()" style="display:none">
+            🪑 Pesan Kursi Tambahan
+          </button>
+          <button class="btn-pesan ditutup" id="as-btn-ditutup" style="display:none" disabled>
+            🔒 Pendaftaran Ditutup
+          </button>
+          <button class="btn-pesan penuh" id="as-btn-penuh" style="display:none" disabled>
+            ❌ Kuota Penuh
+          </button>
+        </div>
       </div>
       <div class="foot">&copy; 2026 <a href="#">AL-WILDAN ISLAMIC SCHOOL</a></div>
     </div>
@@ -1093,7 +1275,7 @@
 // ═══════════════════════════════════════════
 //  CONFIG
 // ═══════════════════════════════════════════
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbybY9szuySVMpxNqt-8nH6T2sNwWTGuV5RsRRvWEB_RxOuDTJVzNmwK8SPA1KC7NvR_/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxzU1Scv8HVfIP6lKZPZyH88-ew2QFwJ02bh6zB4mz3wH2TE_tHo6ITFrZWI2Egu9UR/exec';
 
 // ─ SEATING CONFIG ─
 const BLOK = {
@@ -1327,6 +1509,8 @@ function selectHari(h){
   $('h1-btn').classList.toggle('active',h===1);$('h2-btn').classList.toggle('active',h===2);
   $('btn-cari').disabled=false;$('inp-kursi').max=MAX_SEAT[h];$('err-msg').classList.remove('on');
   $('inp-kursi').focus();
+  // Muat data kursi tambahan untuk hari yang dipilih
+  asInit(h);
 }
 $('inp-kursi').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
 
@@ -1566,9 +1750,616 @@ document.querySelectorAll('input,select').forEach(el=>{
   el.addEventListener('focus',()=>setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),300));
 });
 
+// ═══════════════════════════════════════════
+//  ADDITIONAL SEAT
+// ═══════════════════════════════════════════
+const AS_GAS_URL    = 'YOUR_GAS_ADDITIONAL_URL'; // ganti setelah deploy GAS_ADDITIONAL_SEAT
+const AS_WA_PANITIA = '6281281898982';
+const AS_HARGA      = 250000;
+const AS_MAX_AYAH   = 100;
+const AS_MAX_IBU    = 100;
+const AS_COLS       = 14;
+const AS_HOLD_MIN   = 10;
+const AS_REFRESH_S  = 30;
+const AS_BATAS      = new Date('2026-05-30T23:59:59');
+const AS_SW=11,AS_SH=11,AS_SG=2,AS_U=AS_SW+AS_SG;
+const AS_CBG='#f1f5f9',AS_CT='#1e3a5f',AS_CA='#b8c9de',AS_CB='#ef4444',AS_CH='#f59e0b',AS_CAYAH='#059669',AS_CIBU='#db2777';
+
+let asHari=0, asData={1:null,2:null}, asFileData=null;
+let asHoldEnd=null, asHoldTimer=null, asHoldActive=false;
+let asRefTimer=null, asRefCount=AS_REFRESH_S;
+let asLastSubmit=null, asSubmitting=false;
+let asPopupHari=0; // hari yang dipilih di dalam popup
+
+// Inisiasi setelah hari dipilih di tab denah
+function asInit(hari) {
+  if(asHari===hari && asData[hari]){asUpdateUI(hari);return;}
+  asHari=hari;
+  asFetch(hari);
+  asStartRefresh();
+}
+
+// Fetch data dari GAS (dengan fallback mock saat GAS belum tersedia)
+async function asFetch(h) {
+  try {
+    if(AS_GAS_URL==='YOUR_GAS_ADDITIONAL_URL') throw new Error('mock');
+    const r=await fetch(`${AS_GAS_URL}?action=getAdditionalSeats&hari=${h}`);
+    const d=await r.json();
+    if(d.status!=='success') throw new Error(d.message||'error');
+    // Format response GAS ke format internal
+    asData[h]={ayah:d.ayah||[],ibu:d.ibu||[]};
+  } catch(e) {
+    // Fallback ke data uji coba jika GAS belum tersedia
+    asData[h]=AS_MOCK[h];
+  }
+  asUpdateUI(h);
+}
+
+// Update UI kuota + SVG di tab denah
+function asUpdateUI(h) {
+  const d=asData[h];
+  const bA=d.ayah.length, bI=d.ibu.length;
+  const sA=AS_MAX_AYAH-bA, sI=AS_MAX_IBU-bI;
+
+  $('as-kuota-row').style.display   = 'flex';
+  $('as-legend-row').style.display  = 'flex';
+  $('as-hint').style.display        = 'block';
+  $('as-svg-sc').style.display      = 'block';
+  $('as-refresh-row').style.display = 'flex';
+
+  $('as-sisa-ayah').textContent = sA+' tersedia';
+  $('as-sisa-ibu').textContent  = sI+' tersedia';
+  $('as-sub-ayah').textContent  = `${bA} dipesan dari ${AS_MAX_AYAH}`;
+  $('as-sub-ibu').textContent   = `${bI} dipesan dari ${AS_MAX_IBU}`;
+  $('as-bar-ayah').style.width  = (sA/AS_MAX_AYAH*100)+'%';
+  $('as-bar-ibu').style.width   = (sI/AS_MAX_IBU*100)+'%';
+
+  const ditutup=new Date()>AS_BATAS, penuh=sA<=0&&sI<=0;
+  $('as-btn-pesan').style.display   = (!ditutup&&!penuh)?'flex':'none';
+  $('as-btn-ditutup').style.display = ditutup?'flex':'none';
+  $('as-btn-penuh').style.display   = (!ditutup&&penuh)?'flex':'none';
+  if(ditutup) $('as-closed-notice').classList.add('on');
+
+  asBuildSVG(h);
+
+  // Update kuota mini di popup jika hari sama
+  if(asPopupHari===h) asUpdatePopupKuota(h);
+}
+
+// SVG Peta Kursi Tambahan
+function asBuildSVG(h) {
+  const d=asData[h]; const aMap={},iMap={};
+  d.ayah.forEach(b=>aMap[b.urut]=b); d.ibu.forEach(b=>iMap[b.urut]=b);
+  const blokW=AS_COLS*AS_U,PAD=10,LABLH=36,INNER=14,DIVGAP=22;
+  const zoneW=blokW+INNER+blokW,NR=4;
+  const totalH=LABLH+NR*AS_U+PAD*2,totalW=PAD+zoneW+DIVGAP+zoneW+PAD;
+  const xD=PAD,xC=PAD+blokW+INNER,xB=PAD+zoneW+DIVGAP,xA=xB+blokW+INNER;
+  let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${totalW}" height="${totalH}" viewBox="0 0 ${totalW} ${totalH}" style="background:${AS_CBG};border-radius:8px" id="as-svg">`;
+  s+=`<rect x="${PAD-2}" y="0" width="${zoneW+4}" height="${LABLH}" rx="4" fill="${AS_CAYAH}18"/>`;
+  s+=`<rect x="${xB-2}" y="0" width="${zoneW+4}" height="${LABLH}" rx="4" fill="${AS_CIBU}18"/>`;
+  const t=(x,y,c,fill,sz,w,op=1)=>`<text x="${x}" y="${y}" text-anchor="middle" fill="${fill}" font-size="${sz}" font-family="Plus Jakarta Sans,sans-serif" font-weight="${w}" opacity="${op}">${c}</text>`;
+  s+=t(PAD+zoneW/2,15,'👨 AYAH',AS_CAYAH,11,800)+t(PAD+zoneW/2,28,'Sisi Kiri Panggung',AS_CAYAH,8,600,.8);
+  s+=t(xB+zoneW/2,15,'🧕 IBU',AS_CIBU,11,800)+t(xB+zoneW/2,28,'Sisi Kanan Panggung',AS_CIBU,8,600,.8);
+  s+=t(xD+blokW/2,28,'BLOK D',AS_CAYAH,7,700,.55)+t(xC+blokW/2,28,'BLOK C',AS_CAYAH,7,700,.55);
+  s+=t(xB+blokW/2,28,'BLOK B',AS_CIBU,7,700,.55)+t(xA+blokW/2,28,'BLOK A',AS_CIBU,7,700,.55);
+  const dX=PAD+zoneW+DIVGAP/2;
+  s+=`<line x1="${dX}" y1="4" x2="${dX}" y2="${totalH-4}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3" opacity=".5"/>`;
+  s+=`<line x1="${xD+blokW+INNER/2}" y1="${LABLH+2}" x2="${xD+blokW+INNER/2}" y2="${totalH-4}" stroke="${AS_CT}" stroke-width=".8" opacity=".15"/>`;
+  s+=`<line x1="${xB+blokW+INNER/2}" y1="${LABLH+2}" x2="${xB+blokW+INNER/2}" y2="${totalH-4}" stroke="${AS_CT}" stroke-width=".8" opacity=".15"/>`;
+  const TOTAL=100,GROUP=28;
+  for(let urut=1;urut<=TOTAL;urut++){
+    const grup=Math.ceil(urut/GROUP),posG=((urut-1)%GROUP)+1,row=grup-1,y=LABLH+PAD+row*AS_U;
+    if(posG<=AS_COLS){const col=AS_COLS-posG;s+=asRect(xC+col*AS_U,y,urut,aMap[urut],'ayah');s+=asRect(xA+col*AS_U,y,urut,iMap[urut],'ibu');}
+    else{const p2=posG-AS_COLS,col=AS_COLS-p2;s+=asRect(xD+col*AS_U,y,urut,aMap[urut],'ayah');s+=asRect(xB+col*AS_U,y,urut,iMap[urut],'ibu');}
+  }
+  const bdr=(bx,by,bh)=>`<rect x="${bx-1}" y="${by-1}" width="${AS_COLS*AS_U+2}" height="${bh+2}" rx="4" fill="none" stroke="${AS_CT}22" stroke-width="1"/>`;
+  const bh=NR*AS_U;
+  s+=bdr(xD,LABLH+PAD,bh)+bdr(xC,LABLH+PAD,bh)+bdr(xB,LABLH+PAD,bh)+bdr(xA,LABLH+PAD,bh)+`</svg>`;
+  $('as-svg-sc').innerHTML=s;
+  const svg=$('as-svg');
+  svg.addEventListener('click',asOnClick);svg.addEventListener('mousemove',asOnHover);
+  svg.addEventListener('mouseleave',asHideTooltip);svg.addEventListener('touchstart',asOnTouch,{passive:true});
+}
+
+function asRect(x,y,urut,b,zona){
+  let fill=AS_CA,attr='';
+  if(b){fill=b.status==='hold'?AS_CH:AS_CB;attr=` data-u="${urut}" data-w="${b.kursiWisu}" data-n="${b.nama}" data-s="${b.status}" data-z="${zona}"`;}
+  let r=`<rect x="${x}" y="${y}" width="${AS_SW}" height="${AS_SH}" rx="2" fill="${fill}"${attr}/>`;
+  if(b) r+=`<text x="${x+AS_SW/2}" y="${y+AS_SH-2.5}" text-anchor="middle" fill="white" font-size="5" font-weight="800" font-family="Plus Jakarta Sans,sans-serif" pointer-events="none">${urut}</text>`;
+  return r;
+}
+
+// Tooltip
+function asOnClick(e){if(e.target.dataset.w) asShowTT(e.target,e.clientX,e.clientY);}
+function asOnHover(e){const r=e.target;if(r.dataset.w) asShowTT(r,e.clientX,e.clientY);else asHideTooltip();}
+function asOnTouch(e){const r=e.target;if(!r.dataset.w){asHideTooltip();return;}const t=e.touches[0];asShowTT(r,t.clientX,t.clientY);setTimeout(asHideTooltip,2500);}
+function asShowTT(r,cx,cy){
+  const tt=$('as-tt');
+  const st=r.dataset.s==='hold'?'⏳ Sedang Direservasi':'🔴 Sudah Dipesan';
+  const zo=r.dataset.z==='ayah'?'👨 Ayah':'🧕 Ibu';
+  tt.innerHTML=`<strong>Kursi Tambahan #${r.dataset.u}</strong>${zo} · ${st}<br>Wisudawan: <span style="color:var(--gold)">${r.dataset.n}</span><br>No. Kursi: <span style="color:var(--gold)">${r.dataset.w}</span>`;
+  tt.classList.add('on');const w=190;
+  tt.style.left=(cx+14+w>window.innerWidth?cx-w-14:cx+14)+'px';tt.style.top=Math.max(8,cy-10)+'px';
+}
+function asHideTooltip(){$('as-tt').classList.remove('on');}
+
+// Auto-refresh
+function asStartRefresh(){
+  clearInterval(asRefTimer);asRefCount=AS_REFRESH_S;asRefreshTxt();
+  asRefTimer=setInterval(()=>{
+    if(document.hidden||!asHari) return;
+    asRefCount--;asRefreshTxt();
+    if(asRefCount<=0){asRefCount=AS_REFRESH_S;asFetch(asHari);}
+  },1000);
+}
+function asRefreshTxt(){if($('as-refresh-txt')) $('as-refresh-txt').textContent=`Diperbarui dalam ${asRefCount} detik`;}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&asHari) asFetch(asHari);});
+
+// POPUP
+function asBukaPopup(){
+  if(new Date()>AS_BATAS){showToast('❌ Batas waktu pendaftaran kursi tambahan telah berakhir.');return;}
+  $('as-popup').classList.add('on');document.body.style.overflow='hidden';
+  // Auto-select hari jika sudah dipilih di tab denah
+  if(asHari) asPopupPilihHari(asHari);
+}
+function asTutupPopup(){$('as-popup').classList.remove('on');document.body.style.overflow='';}
+function asPopupBg(e){if(e.target===$('as-popup')) asTutupPopup();}
+
+// Pilih hari di dalam popup
+function asPopupPilihHari(h){
+  asPopupHari=h;
+  $('as-ph1').classList.toggle('active',h===1);
+  $('as-ph2').classList.toggle('active',h===2);
+  $('as-err-hari').classList.remove('on');
+  // Fetch jika belum ada data untuk hari ini
+  if(!asData[h]) asFetch(h);
+  asUpdatePopupKuota(h);
+  // Reset nama/kursi jika hari berganti
+  $('as-inp-kursi').value='';$('as-inp-nama').value='';
+  $('as-inp-nama').classList.remove('as-autofilled');
+}
+
+function asUpdatePopupKuota(h){
+  const d=asData[h]; if(!d) return;
+  const sA=AS_MAX_AYAH-d.ayah.length, sI=AS_MAX_IBU-d.ibu.length;
+  $('as-popup-kuota').style.display='flex';
+  $('as-popup-sisa-ayah').textContent=sA+' tersedia';
+  $('as-popup-sisa-ibu').textContent=sI+' tersedia';
+}
+
+// Auto-fill nama ↔ kursi
+function asOnKursiInput(){
+  const val=parseInt($('as-inp-kursi').value);
+  if(!val){$('as-inp-nama').value='';$('as-inp-nama').classList.remove('as-autofilled');return;}
+  // Filter berdasarkan hari jika sudah dipilih
+  const src=asPopupHari ? allStudents.filter(s=>s.hari===asPopupHari) : allStudents;
+  const s=src.find(x=>parseInt(x.nomorKursi)===val);
+  if(s){$('as-inp-nama').value=s.nama;$('as-inp-nama').classList.add('as-autofilled');$('as-err-kursi').classList.remove('on');$('as-inp-kursi').classList.remove('bad');}
+  else{$('as-inp-nama').value='';$('as-inp-nama').classList.remove('as-autofilled');}
+}
+
+function asOnNamaInput(){
+  $('as-inp-nama').classList.remove('as-autofilled');$('as-inp-kursi').value='';
+  const q=$('as-inp-nama').value.trim().toLowerCase();if(q.length<3){asCloseSug();return;}
+  const src=asPopupHari ? allStudents.filter(s=>s.hari===asPopupHari) : allStudents;
+  asRenderSug(src.filter(s=>s.nama.toLowerCase().includes(q)).slice(0,8));
+}
+function asRenderSug(res){
+  $('as-sug').innerHTML='';
+  if(!res.length){$('as-sug').innerHTML='<div class="as-sug-empty">Siswa tidak ditemukan</div>';}
+  else res.forEach(s=>{
+    const el=document.createElement('div');el.className='as-sug-item';
+    el.innerHTML=`<div class="as-sug-name">${s.nama}</div><div class="as-sug-meta">Kursi ${s.nomorKursi} · ${s.kelas} · ${s.cabang}</div>`;
+    el.addEventListener('click',()=>{$('as-inp-nama').value=s.nama;$('as-inp-kursi').value=s.nomorKursi;$('as-inp-nama').classList.add('as-autofilled');$('as-err-nama').classList.remove('on');$('as-err-kursi').classList.remove('on');asCloseSug();});
+    $('as-sug').appendChild(el);
+  });
+  $('as-sug').classList.add('on');
+}
+function asCloseSug(){$('as-sug').classList.remove('on');$('as-sug').innerHTML='';}
+document.addEventListener('click',e=>{if(!e.target.closest('.as-ac-wrap')) asCloseSug();});
+
+// Jumlah + jenis kelamin
+function asOnJmlChange(){
+  const jml=parseInt($('as-sel-jml').value)||0;
+  if(jml>0){$('as-total').style.display='flex';$('as-total-val').textContent='Rp'+(jml*AS_HARGA).toLocaleString('id-ID');$('as-total-lbl').textContent=`${jml} kursi × Rp${AS_HARGA.toLocaleString('id-ID')}`;}
+  else $('as-total').style.display='none';
+  if(!jml){$('as-gender-sec').style.display='none';return;}
+  $('as-gender-sec').style.display='flex';
+  const wrap=$('as-gender-wrap');wrap.innerHTML='';
+  for(let i=1;i<=jml;i++){
+    const row=document.createElement('div');row.className='as-gender-row';
+    row.innerHTML=`<span class="as-gender-lbl">Peserta ke-${i}</span><div class="as-gender-opts"><div class="as-g-opt"><input type="radio" name="asg${i}" id="aslk${i}" value="Laki-laki"><label for="aslk${i}" class="laki">Laki-laki</label></div><div class="as-g-opt"><input type="radio" name="asg${i}" id="aspr${i}" value="Perempuan"><label for="aspr${i}" class="perempuan">Perempuan</label></div></div>`;
+    wrap.appendChild(row);
+  }
+}
+
+// Salin rekening
+function asSalinRek(){
+  navigator.clipboard.writeText('7340897026').then(()=>{
+    const b=$('as-btn-salin');
+    b.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Tersalin!`;
+    b.classList.add('tersalin');
+    setTimeout(()=>{b.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Salin`;b.classList.remove('tersalin');},2000);
+  });
+}
+
+// Unggah & kompresi
+function asHandleFile(input){
+  const file=input.files[0];if(!file) return;
+  if(file.size>10*1024*1024){showToast('❌ Ukuran berkas terlalu besar (maks. 10MB)');return;}
+  $('as-upload-prog').style.display='block';$('as-upload-txt').textContent='Memproses berkas...';asAnimProg();
+  if(file.type.startsWith('image/')){asCompress(file,1024,.8,r=>{asFileData=r;asShowFile(r.name,(r.size/1024).toFixed(0),(file.size/1024).toFixed(0));});}
+  else{const rd=new FileReader();rd.onload=e=>{asFileData={base64:e.target.result,name:file.name,type:file.type,size:file.size};asShowFile(file.name,(file.size/1024).toFixed(0),null);};rd.readAsDataURL(file);}
+}
+function asCompress(file,maxPx,q,cb){
+  const rd=new FileReader();rd.onload=e=>{const img=new Image();img.onload=()=>{
+    let w=img.width,h=img.height;if(w>maxPx||h>maxPx){if(w>h){h=Math.round(h*maxPx/w);w=maxPx;}else{w=Math.round(w*maxPx/h);h=maxPx;}}
+    const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+    const b64=c.toDataURL('image/jpeg',q);cb({base64:b64,name:file.name.replace(/\.[^.]+$/,'.jpg'),type:'image/jpeg',size:Math.round(b64.length*3/4)});
+  };img.src=e.target.result;};rd.readAsDataURL(file);
+}
+function asAnimProg(){let p=0;const bar=$('as-upload-prog-bar');const iv=setInterval(()=>{p+=Math.random()*25;if(p>=90){clearInterval(iv);p=90;}bar.style.width=p+'%';},80);setTimeout(()=>bar.style.width='100%',700);}
+function asShowFile(name,compKB,origKB){
+  $('as-upload-area').classList.add('has-file');$('as-upload-ic').textContent='✅';$('as-upload-txt').textContent='Berkas siap diunggah';
+  $('as-upload-fname').style.display='block';$('as-upload-fname').textContent=name;
+  $('as-compress-info').style.display='block';$('as-compress-info').textContent=origKB?`Dioptimalkan: ${origKB}KB → ${compKB}KB`:`Ukuran: ${compKB}KB`;
+  $('as-err-file').classList.remove('on');
+}
+
+// Timer reservasi
+function asStartTimer(){
+  asHoldActive=true;asHoldEnd=Date.now()+AS_HOLD_MIN*60000;
+  $('as-timer-strip').classList.add('on');asHoldTimer=setInterval(asTickTimer,1000);asTickTimer();
+}
+function asTickTimer(){
+  const left=asHoldEnd-Date.now();
+  if(left<=0){clearInterval(asHoldTimer);$('as-timer-val').textContent='00:00';$('as-timer-strip').classList.remove('on');showToast('⏰ Waktu reservasi habis. Silakan mulai kembali.',5000);asHoldActive=false;return;}
+  const m=Math.floor(left/60000),sc=Math.floor((left%60000)/1000);
+  $('as-timer-val').textContent=`${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`;
+  $('as-timer-strip').classList.toggle('bahaya',left<120000);
+}
+
+// Validasi
+function asValidate(){
+  let ok=true;
+  if(!asPopupHari){$('as-err-hari').classList.add('on');ok=false;}else $('as-err-hari').classList.remove('on');
+  const nama=$('as-inp-nama').value.trim(),kursi=$('as-inp-kursi').value.trim(),jml=parseInt($('as-sel-jml').value)||0,wa=$('as-inp-wa').value.trim();
+  $('as-err-nama').classList.toggle('on',!nama);$('as-inp-nama').classList.toggle('bad',!nama);if(!nama)ok=false;
+  $('as-err-kursi').classList.toggle('on',!kursi);$('as-inp-kursi').classList.toggle('bad',!kursi);if(!kursi)ok=false;
+  $('as-err-wa').classList.toggle('on',!wa);$('as-inp-wa').classList.toggle('bad',!wa);if(!wa)ok=false;
+  $('as-err-jml').classList.toggle('on',!jml);$('as-sel-jml').classList.toggle('bad',!jml);if(!jml)ok=false;
+  if(jml>0){let gOk=true;for(let i=1;i<=jml;i++){if(!document.querySelector(`input[name="asg${i}"]:checked`))gOk=false;}$('as-err-gender').classList.toggle('on',!gOk);if(!gOk)ok=false;}
+  if(!asFileData){$('as-err-file').classList.add('on');ok=false;}else $('as-err-file').classList.remove('on');
+  return ok;
+}
+
+// Kirim formulir
+async function asSubmit(){
+  if(!asValidate()){showToast('⚠️ Lengkapi semua data yang wajib diisi');return;}
+  if(asSubmitting) return;
+  asSubmitting=true;
+  const btn=$('as-btn-kirim');btn.classList.add('loading');btn.disabled=true;
+
+  const jml=parseInt($('as-sel-jml').value);
+  const genders=[];
+  for(let i=1;i<=jml;i++){const g=document.querySelector(`input[name="asg${i}"]:checked`);genders.push(g?g.value:'');}
+  const laki=genders.filter(g=>g==='Laki-laki').length, wanita=genders.filter(g=>g==='Perempuan').length;
+  const nama=$('as-inp-nama').value.trim(), kursi=$('as-inp-kursi').value.trim(), wa=$('as-inp-wa').value.trim();
+
+  let noPesan='', assAyah=[], assIbu=[];
+
+  try {
+    if(AS_GAS_URL!=='YOUR_GAS_ADDITIONAL_URL') {
+      // POST ke GAS real
+      const body=new URLSearchParams({
+        action         : 'additionalSeat',
+        nama_wisudawan : nama,
+        nomor_kursi    : kursi,
+        hari           : asPopupHari,
+        jumlah         : jml,
+        no_wa          : wa,
+        gender_1       : genders[0]||'',
+        gender_2       : genders[1]||'',
+        gender_3       : genders[2]||'',
+        file_base64    : asFileData.base64,
+        file_name      : asFileData.name,
+        file_type      : asFileData.type
+      });
+      const r=await fetch(AS_GAS_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
+      const d=await r.json();
+      if(d.status!=='success') throw new Error(d.message||'Gagal mengirim pesanan.');
+      noPesan  = d.nomorPemesanan;
+      assAyah  = d.assignedAyah||[];
+      assIbu   = d.assignedIbu||[];
+    } else {
+      // Simulasi saat GAS belum tersedia
+      await new Promise(r=>setTimeout(r,1500));
+      const d=asData[asPopupHari];
+      const bA=d.ayah.length, bI=d.ibu.length;
+      for(let i=0;i<laki;i++) assAyah.push(bA+i+1);
+      for(let i=0;i<wanita;i++) assIbu.push(bI+i+1);
+      noPesan=`AS-H${asPopupHari}-${String(bA+bI+1).padStart(3,'0')}`;
+    }
+  } catch(err) {
+    showToast('❌ '+err.message,4000);
+    btn.classList.remove('loading');btn.disabled=false;asSubmitting=false;return;
+  }
+
+  asLastSubmit={noPesan,nama,kursi,wa,hari:asPopupHari,jml,genders,assAyah,assIbu};
+  btn.classList.remove('loading');btn.disabled=false;asSubmitting=false;
+  if(!asHoldActive) asStartTimer();
+  asShowSukses(noPesan,assAyah,assIbu);
+  // Refresh data kursi setelah pesan berhasil
+  setTimeout(()=>asFetch(asPopupHari),1000);
+}
+
+function asShowSukses(nomor,ayah,ibu){
+  $('as-form-wrap').style.display='none';$('as-sukses').classList.add('on');
+  $('as-s-nomor').textContent=nomor;
+  let seats='';ayah.forEach(n=>seats+=`<span class="as-seat-bdg ayah">👨 Ayah #${n}</span>`);ibu.forEach(n=>seats+=`<span class="as-seat-bdg ibu">🧕 Ibu #${n}</span>`);
+  $('as-s-seats').innerHTML=seats;
+  $('as-s-msg').innerHTML='Pesanan diterima. Kursi direservasi selama <strong>10 menit</strong>.<br>Panitia akan memverifikasi pembayaran Anda.<br><span style="color:#f59e0b">Konfirmasi via WhatsApp agar pesanan diproses lebih cepat.</span>';
+}
+
+function asKirimWA(){
+  if(!asLastSubmit) return;
+  const d=asLastSubmit;
+  const msg=encodeURIComponent(
+    `🪑 *PESANAN KURSI TAMBAHAN*\n`+
+    `Nomor Pemesanan: *${d.noPesan}*\n\n`+
+    `👤 Wisudawan: *${d.nama}*\n`+
+    `💺 Nomor Kursi: *${d.kursi}*\n`+
+    `📅 Hari: *${d.hari===1?'Hari 1 — Ikhwan':'Hari 2 — Akhwat'}*\n`+
+    `📱 No. WA: *${d.wa}*\n`+
+    `👥 Jumlah Tambahan: *${d.jml} orang*\n`+
+    (d.assAyah.length?`👨 Kursi Ayah: *${d.assAyah.join(', ')}*\n`:'')+
+    (d.assIbu.length?`🧕 Kursi Ibu: *${d.assIbu.join(', ')}*\n`:'')+
+    `\n_Mohon dikonfirmasi. Jazakumullahu khairan._`
+  );
+  window.open(`https://wa.me/${AS_WA_PANITIA}?text=${msg}`,'_blank');
+}
+
+// DATA UJI COBA (dipakai saat GAS_URL masih placeholder)
+const AS_MOCK={
+  1:{
+    ayah:[
+      {urut:1,kursiWisu:15,nama:'AHMAD ZAID',status:'booked'},
+      {urut:2,kursiWisu:28,nama:'UMAR FARUQ',status:'booked'},
+      {urut:3,kursiWisu:7,nama:'IBRAHIM K.',status:'booked'},
+      {urut:15,kursiWisu:120,nama:'YUSUF AL-AMIN',status:'booked'},
+      {urut:16,kursiWisu:177,nama:'BILAL IBN R.',status:'hold'},
+      {urut:29,kursiWisu:200,nama:'AISYAH B.',status:'booked'},
+    ],
+    ibu:[
+      {urut:1,kursiWisu:15,nama:'AHMAD ZAID',status:'booked'},
+      {urut:2,kursiWisu:7,nama:'IBRAHIM K.',status:'booked'},
+      {urut:15,kursiWisu:120,nama:'YUSUF AL-AMIN',status:'hold'},
+      {urut:29,kursiWisu:55,nama:'KHADIJAH B.',status:'booked'},
+    ]
+  },
+  2:{
+    ayah:[
+      {urut:1,kursiWisu:42,nama:'FATIMAH AZ.',status:'booked'},
+      {urut:2,kursiWisu:55,nama:'KHADIJAH B.',status:'booked'},
+      {urut:15,kursiWisu:88,nama:'MARYAM B.',status:'hold'},
+    ],
+    ibu:[
+      {urut:1,kursiWisu:42,nama:'FATIMAH AZ.',status:'booked'},
+      {urut:2,kursiWisu:88,nama:'MARYAM B.',status:'booked'},
+      {urut:15,kursiWisu:63,nama:'SALMAN F.',status:'hold'},
+      {urut:16,kursiWisu:55,nama:'KHADIJAH B.',status:'booked'},
+    ]
+  }
+};
+  1:{
+    ayah:[
+      {urut:1,kursiWisu:15,nama:'AHMAD ZAID',status:'booked'},
+      {urut:2,kursiWisu:28,nama:'UMAR FARUQ',status:'booked'},
+      {urut:3,kursiWisu:7,nama:'IBRAHIM K.',status:'booked'},
+      {urut:15,kursiWisu:120,nama:'YUSUF AL-AMIN',status:'booked'},
+      {urut:16,kursiWisu:177,nama:'BILAL IBN R.',status:'hold'},
+      {urut:29,kursiWisu:200,nama:'AISYAH B.',status:'booked'},
+    ],
+    ibu:[
+      {urut:1,kursiWisu:15,nama:'AHMAD ZAID',status:'booked'},
+      {urut:2,kursiWisu:7,nama:'IBRAHIM K.',status:'booked'},
+      {urut:15,kursiWisu:120,nama:'YUSUF AL-AMIN',status:'hold'},
+      {urut:29,kursiWisu:55,nama:'KHADIJAH B.',status:'booked'},
+    ]
+  },
+  2:{
+    ayah:[
+      {urut:1,kursiWisu:42,nama:'FATIMAH AZ.',status:'booked'},
+      {urut:2,kursiWisu:55,nama:'KHADIJAH B.',status:'booked'},
+      {urut:15,kursiWisu:88,nama:'MARYAM B.',status:'hold'},
+    ],
+    ibu:[
+      {urut:1,kursiWisu:42,nama:'FATIMAH AZ.',status:'booked'},
+      {urut:2,kursiWisu:88,nama:'MARYAM B.',status:'booked'},
+      {urut:15,kursiWisu:63,nama:'SALMAN F.',status:'hold'},
+      {urut:16,kursiWisu:55,nama:'KHADIJAH B.',status:'booked'},
+    ]
+  }
+};
+
 // ─ START ─
 preloadRundown();
 initApp();
 </script>
+<!-- TOOLTIP KURSI TAMBAHAN -->
+<div class="as-tooltip" id="as-tt"></div>
+
+<!-- POPUP FORMULIR KURSI TAMBAHAN -->
+<div class="as-popup" id="as-popup" onclick="asPopupBg(event)">
+  <div class="as-popup-inner">
+    <div class="as-popup-hdr">
+      <span class="as-popup-title">🪑 Pesan Kursi Tambahan</span>
+      <button class="as-popup-close" onclick="asTutupPopup()">✕</button>
+    </div>
+    <div class="as-popup-body" id="as-popup-body">
+
+      <!-- PEMBERITAHUAN DITUTUP -->
+      <div class="as-closed-notice" id="as-closed-notice">
+        <strong>Pendaftaran Telah Ditutup</strong>
+        Batas waktu pendaftaran kursi tambahan (30 Mei 2026) telah berakhir.
+      </div>
+
+      <!-- INFO BANNER -->
+      <div style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.18);border-radius:var(--r-sm);padding:12px 14px;display:flex;flex-direction:column;gap:7px;">
+        <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">💺 <span>Tersedia <strong style="color:var(--gold)">200 kursi tambahan per hari</strong> (100 Ayah · 100 Ibu)</span></div>
+        <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">💰 <span>Biaya <strong style="color:var(--gold)">Rp250.000 per kursi</strong> · Maksimum <strong style="color:var(--gold)">3 kursi</strong> per keluarga</span></div>
+        <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">📍 <span>Kursi berada di <strong style="color:var(--gold)">baris paling akhir (area belakang)</strong></span></div>
+        <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">📅 <span>Batas pendaftaran: <strong style="color:var(--gold)">26–30 Mei 2026</strong></span></div>
+      </div>
+
+      <!-- FORMULIR -->
+      <div id="as-form-wrap">
+
+        <!-- PILIH HARI -->
+        <div class="as-fg">
+          <label>Pilih Hari Wisuda *</label>
+          <div style="display:flex;gap:8px;">
+            <button type="button" class="as-hari-btn-popup" id="as-ph1" onclick="asPopupPilihHari(1)">
+              Hari 1<small>Rabu, 17 Juni — Ikhwan</small>
+            </button>
+            <button type="button" class="as-hari-btn-popup" id="as-ph2" onclick="asPopupPilihHari(2)">
+              Hari 2<small>Kamis, 18 Juni — Akhwat</small>
+            </button>
+          </div>
+          <div class="as-err" id="as-err-hari">Hari wisuda wajib dipilih.</div>
+        </div>
+
+        <!-- KUOTA MINI -->
+        <div id="as-popup-kuota" style="display:none;gap:6px;flex-direction:row;">
+          <div style="flex:1;background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.2);border-radius:6px;padding:7px 10px;">
+            <div style="font-size:9px;font-weight:700;color:#059669;letter-spacing:.8px;text-transform:uppercase;">👨 Ayah</div>
+            <div style="font-size:14px;font-weight:900;color:var(--white)" id="as-popup-sisa-ayah">—</div>
+          </div>
+          <div style="flex:1;background:rgba(219,39,119,.1);border:1px solid rgba(219,39,119,.2);border-radius:6px;padding:7px 10px;">
+            <div style="font-size:9px;font-weight:700;color:#db2777;letter-spacing:.8px;text-transform:uppercase;">🧕 Ibu</div>
+            <div style="font-size:14px;font-weight:900;color:var(--white)" id="as-popup-sisa-ibu">—</div>
+          </div>
+        </div>
+
+        <!-- DATA WISUDAWAN -->
+        <div class="as-fg">
+          <label>Nomor Kursi Wisudawan *</label>
+          <input type="number" id="as-inp-kursi" inputmode="numeric" placeholder="Masukkan nomor kursi wisudawan..." oninput="asOnKursiInput()">
+          <div class="as-err" id="as-err-kursi">Nomor kursi wajib diisi.</div>
+        </div>
+
+        <div class="as-fg">
+          <label>Nama Lengkap Wisudawan *</label>
+          <div class="as-ac-wrap">
+            <input type="text" id="as-inp-nama" placeholder="Ketik nama atau isi otomatis dari nomor kursi..." oninput="asOnNamaInput()" autocomplete="off" spellcheck="false">
+            <div class="as-sug" id="as-sug"></div>
+          </div>
+          <div class="as-err" id="as-err-nama">Nama wisudawan wajib diisi.</div>
+        </div>
+
+        <!-- NOMOR WA -->
+        <div class="as-fg">
+          <label>Nomor WhatsApp Pemesan *</label>
+          <input type="tel" id="as-inp-wa" inputmode="numeric" placeholder="Contoh: 08123456789">
+          <div class="as-err" id="as-err-wa">Nomor WhatsApp wajib diisi.</div>
+        </div>
+
+        <!-- JUMLAH -->
+        <div class="as-fg">
+          <label>Jumlah Kursi Tambahan *</label>
+          <select id="as-sel-jml" onchange="asOnJmlChange()">
+            <option value="">— Pilih jumlah —</option>
+            <option value="1">1 kursi — Rp250.000</option>
+            <option value="2">2 kursi — Rp500.000</option>
+            <option value="3">3 kursi — Rp750.000 (maks.)</option>
+          </select>
+          <div class="as-err" id="as-err-jml">Jumlah kursi wajib dipilih.</div>
+        </div>
+
+        <!-- JENIS KELAMIN -->
+        <div class="as-fg" id="as-gender-sec" style="display:none">
+          <label>Jenis Kelamin Peserta Tambahan *</label>
+          <div class="as-gender-wrap" id="as-gender-wrap"></div>
+          <div class="as-err" id="as-err-gender">Jenis kelamin semua peserta wajib dipilih.</div>
+        </div>
+
+        <!-- TOTAL -->
+        <div class="as-total" id="as-total" style="display:none">
+          <span class="as-total-lbl" id="as-total-lbl">Total Biaya</span>
+          <span class="as-total-val" id="as-total-val">Rp0</span>
+        </div>
+
+        <!-- REKENING -->
+        <div class="as-rek-box">
+          <div class="as-rek-bank">Bank Syariah Indonesia (BSI)</div>
+          <div class="as-rek-row">
+            <div>
+              <div class="as-rek-num">7340897026</div>
+              <div class="as-rek-name">a.n. WISUDA AKBAR 2026</div>
+            </div>
+            <button class="as-btn-salin" id="as-btn-salin" onclick="asSalinRek()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Salin
+            </button>
+          </div>
+        </div>
+        <p style="font-size:11px;color:rgba(255,255,255,.32);line-height:1.6;">
+          Transfer sesuai total biaya, lalu simpan bukti untuk diunggah di bawah ini.
+        </p>
+
+        <!-- UNGGAH BUKTI -->
+        <div class="as-fg">
+          <label>Bukti Pembayaran *</label>
+          <div class="as-upload-area" id="as-upload-area">
+            <input type="file" id="as-inp-file" accept="image/*,.pdf" onchange="asHandleFile(this)">
+            <div class="as-upload-ic" id="as-upload-ic">📎</div>
+            <div class="as-upload-txt" id="as-upload-txt">Ketuk untuk mengunggah bukti transfer</div>
+            <div class="as-upload-hint">JPG, PNG, PDF · Dioptimalkan otomatis · Maks. 10MB</div>
+            <div class="as-upload-fname" id="as-upload-fname" style="display:none"></div>
+            <div class="as-compress-info" id="as-compress-info" style="display:none"></div>
+            <div class="as-upload-prog" id="as-upload-prog">
+              <div class="as-upload-prog-bar" id="as-upload-prog-bar"></div>
+            </div>
+          </div>
+          <div class="as-err" id="as-err-file">Bukti pembayaran wajib diunggah.</div>
+        </div>
+
+        <!-- TIMER -->
+        <div class="as-timer-strip" id="as-timer-strip">
+          <div class="as-timer-ic">⏳</div>
+          <div>
+            <div class="as-timer-lbl">Sisa Waktu Reservasi</div>
+            <div class="as-timer-val" id="as-timer-val">10:00</div>
+          </div>
+        </div>
+
+        <!-- TOMBOL KIRIM -->
+        <button class="btn-kirim-pesan" id="as-btn-kirim" onclick="asSubmit()">
+          <div class="as-btn-spin"></div>
+          <span id="as-btn-txt">🪑 Kirim Pesanan</span>
+        </button>
+      </div>
+
+      <!-- SUKSES -->
+      <div class="as-sukses" id="as-sukses">
+        <div class="as-sukses-ic">✅</div>
+        <div class="as-sukses-title">Pesanan Diterima!</div>
+        <div class="as-sukses-nomor">
+          <strong id="as-s-nomor">AS-H1-001</strong>
+          Simpan nomor ini sebagai referensi pesanan
+        </div>
+        <div class="as-sukses-seats" id="as-s-seats"></div>
+        <div class="as-sukses-msg" id="as-s-msg"></div>
+        <button class="btn-wa-konfirmasi" onclick="asKirimWA()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Konfirmasi ke Panitia via WhatsApp
+        </button>
+        <button style="width:100%;padding:11px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-md);font-family:inherit;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;" onclick="asTutupPopup()">Tutup</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
