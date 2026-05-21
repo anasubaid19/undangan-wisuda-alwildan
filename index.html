@@ -1275,7 +1275,7 @@
 // ═══════════════════════════════════════════
 //  CONFIG
 // ═══════════════════════════════════════════
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxstc1UuvlYIVTYFjj_sIiO7VZnPJMRr2KignJVb21e-KEi7Oq-wc_dYef8cOfvRkD7/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxnNjkvy3kPTo_l2einF2XCWAKVpE0OmQOcqJeSa6BdO825FeogCHx63eam-Xgri99c/exec';
 
 // ─ SEATING CONFIG ─
 const BLOK = {
@@ -1753,7 +1753,7 @@ document.querySelectorAll('input,select').forEach(el=>{
 // ═══════════════════════════════════════════
 //  ADDITIONAL SEAT
 // ═══════════════════════════════════════════
-const AS_GAS_URL    = 'https://script.google.com/macros/s/AKfycbxstc1UuvlYIVTYFjj_sIiO7VZnPJMRr2KignJVb21e-KEi7Oq-wc_dYef8cOfvRkD7/exec'; // ganti setelah deploy GAS_ADDITIONAL_SEAT
+const AS_GAS_URL    = 'https://script.google.com/macros/s/AKfycbxnNjkvy3kPTo_l2einF2XCWAKVpE0OmQOcqJeSa6BdO825FeogCHx63eam-Xgri99c/exec'; // sama dengan GAS_URL utama (V5)
 const AS_WA_PANITIA = '6281281898982';
 const AS_HARGA      = 250000;
 const AS_MAX_AYAH   = 100;
@@ -2046,7 +2046,7 @@ async function asSubmit(){
   const laki=genders.filter(g=>g==='Laki-laki').length, wanita=genders.filter(g=>g==='Perempuan').length;
   const nama=$('as-inp-nama').value.trim(), kursi=$('as-inp-kursi').value.trim(), wa=$('as-inp-wa').value.trim();
 
-  let noPesan='', assAyah=[], assIbu=[];
+  let noPesan='', assAyah=[], assIbu=[], linkBukti='';
 
   try {
     if(AS_GAS_URL!=='YOUR_GAS_ADDITIONAL_URL') {
@@ -2071,6 +2071,7 @@ async function asSubmit(){
       noPesan  = d.nomorPemesanan;
       assAyah  = d.assignedAyah||[];
       assIbu   = d.assignedIbu||[];
+      linkBukti = d.linkBukti||'';
     } else {
       // Simulasi saat GAS belum tersedia
       await new Promise(r=>setTimeout(r,1500));
@@ -2079,13 +2080,14 @@ async function asSubmit(){
       for(let i=0;i<laki;i++) assAyah.push(bA+i+1);
       for(let i=0;i<wanita;i++) assIbu.push(bI+i+1);
       noPesan=`AS-H${asPopupHari}-${String(bA+bI+1).padStart(3,'0')}`;
+      linkBukti='';
     }
   } catch(err) {
     showToast('❌ '+err.message,4000);
     btn.classList.remove('loading');btn.disabled=false;asSubmitting=false;return;
   }
 
-  asLastSubmit={noPesan,nama,kursi,wa,hari:asPopupHari,jml,genders,assAyah,assIbu};
+  asLastSubmit={noPesan,nama,kursi,wa,hari:asPopupHari,jml,genders,assAyah,assIbu,linkBukti};
   btn.classList.remove('loading');btn.disabled=false;asSubmitting=false;
   if(!asHoldActive) asStartTimer();
   asShowSukses(noPesan,assAyah,assIbu);
@@ -2114,6 +2116,7 @@ function asKirimWA(){
     `👥 Jumlah Tambahan: *${d.jml} orang*\n`+
     (d.assAyah.length?`👨 Kursi Ayah: *${d.assAyah.join(', ')}*\n`:'')+
     (d.assIbu.length?`🧕 Kursi Ibu: *${d.assIbu.join(', ')}*\n`:'')+
+    (d.linkBukti&&d.linkBukti.startsWith('http')?`\n📎 Bukti Transfer:\n${d.linkBukti}\n`:'')+
     `\n_Mohon dikonfirmasi. Jazakumullahu khairan._`
   );
   window.open(`https://wa.me/${AS_WA_PANITIA}?text=${msg}`,'_blank');
