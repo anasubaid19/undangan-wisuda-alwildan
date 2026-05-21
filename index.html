@@ -1187,6 +1187,18 @@ function switchTab(name) {
   $('tab-'+name).classList.add('active');
   $('tab-btn-'+name).classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
+
+  // Auto mute saat masuk tab tutorial, unmute saat keluar
+  const bgm = $('bgm');
+  if (name === 'tutorial') {
+    bgm.muted = true;
+    setMuteUI(true);
+  } else {
+    if (!isMuted) {
+      bgm.muted = false;
+      setMuteUI(false);
+    }
+  }
 }
 
 // ═══════════════════════════════════════════
