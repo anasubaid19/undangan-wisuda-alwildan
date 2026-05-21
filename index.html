@@ -1072,17 +1072,17 @@
         </div>
         <div class="grid-hint">🟢 Ikhwan: Sisi Kiri · 🔴 Akhwat: Sisi Kanan · Geser untuk melihat seluruh denah</div>
         <div class="svg-scroll" id="scroll-ortu"></div>
+      </div>
 
-        <!-- ADDITIONAL SEAT SECTION -->
-        <div style="padding:0 12px 12px">
-          <div class="as-divider">
-            <div class="as-divider-line"></div>
-            <div class="as-divider-lbl">🪑 Kursi Tambahan</div>
-            <div class="as-divider-line"></div>
-          </div>
+      <!-- ADDITIONAL SEAT — card terpisah, muncul setelah doSearch -->
+      <div class="grid-card" id="card-as" style="display:none">
+        <div class="grid-header">
+          <div class="grid-title">🪑 Kursi Tambahan</div>
+        </div>
 
-          <!-- KUOTA -->
-          <div class="as-kuota-row" id="as-kuota-row" style="display:none">
+        <!-- KUOTA -->
+        <div style="padding:0 14px 4px">
+          <div class="as-kuota-row" id="as-kuota-row">
             <div class="as-kuota-chip ayah">
               <div class="as-kc-lbl">🟢 Zona Ikhwan</div>
               <div class="as-kc-val" id="as-sisa-ayah">—</div>
@@ -1096,25 +1096,27 @@
               <div class="as-kc-bar"><div class="as-kc-fill" id="as-bar-ibu" style="width:100%"></div></div>
             </div>
           </div>
+        </div>
 
-          <!-- LEGENDA + HINT -->
-          <div class="as-legend-row" id="as-legend-row" style="display:none">
-            <div class="as-leg"><div class="as-leg-dot" style="background:#b8c9de"></div>Tersedia</div>
-            <div class="as-leg"><div class="as-leg-dot" style="background:#ef4444"></div>Sudah Dipesan</div>
-            <div class="as-leg"><div class="as-leg-dot" style="background:#f59e0b"></div>Sedang Direservasi</div>
-          </div>
-          <div class="as-hint" id="as-hint" style="display:none">👆 Sentuh kursi berwarna untuk melihat informasi · Geser untuk melihat seluruh peta</div>
+        <!-- LEGENDA + HINT -->
+        <div class="as-legend-row" id="as-legend-row" style="padding:0 14px 4px">
+          <div class="as-leg"><div class="as-leg-dot" style="background:#b8c9de"></div>Tersedia</div>
+          <div class="as-leg"><div class="as-leg-dot" style="background:#ef4444"></div>Sudah Dipesan</div>
+          <div class="as-leg"><div class="as-leg-dot" style="background:#f59e0b"></div>Sedang Direservasi</div>
+        </div>
+        <div class="as-hint" id="as-hint" style="padding:0 14px 8px">👆 Sentuh kursi berwarna untuk melihat informasi · Geser untuk melihat seluruh peta</div>
 
-          <!-- SVG PETA -->
-          <div class="as-svg-sc" id="as-svg-sc" style="display:none"></div>
+        <!-- SVG PETA -->
+        <div class="as-svg-sc" id="as-svg-sc" style="padding:0 14px 14px"></div>
 
-          <!-- REFRESH INDICATOR -->
-          <div class="as-refresh-row" id="as-refresh-row" style="display:none">
-            <div class="as-rdot"></div>
-            <span id="as-refresh-txt">Diperbarui dalam 30 detik</span>
-          </div>
+        <!-- REFRESH INDICATOR -->
+        <div class="as-refresh-row" id="as-refresh-row" style="padding:0 14px 10px">
+          <div class="as-rdot"></div>
+          <span id="as-refresh-txt">Diperbarui dalam 30 detik</span>
+        </div>
 
-          <!-- TOMBOL PESAN -->
+        <!-- TOMBOL PESAN -->
+        <div style="padding:0 14px 14px">
           <button class="btn-pesan" id="as-btn-pesan" onclick="asBukaPopup()" style="display:none">
             🪑 Pesan Kursi Tambahan
           </button>
@@ -1280,7 +1282,7 @@
 // ═══════════════════════════════════════════
 //  CONFIG
 // ═══════════════════════════════════════════
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbywNdXYp5fomrBvwRTO-J4pJzDgVAvEbVlQt3-0BBpUqhyuRSRg5gF7qdLlkXzwH3Hy/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxThZHUp7BnDJYv9efMXNHGzM6zkfpt5FheBkMKUmkDsu42yu5DEGfEo5a7mdPmF4T3/exec';
 
 // ─ SEATING CONFIG ─
 const BLOK = {
@@ -1516,8 +1518,8 @@ function selectHari(h){
   $('inp-nama-denah').disabled=false;
   $('inp-nama-denah').placeholder='Ketik nama wisudawan (Hari '+h+')...';
   $('inp-kursi').focus();
-  // Muat data kursi tambahan untuk hari yang dipilih
-  asInit(h);
+  // Reset card-as saat ganti hari
+  $('card-as').style.display='none';
 }
 
 // Auto-fill nama → nomor kursi (di tab denah)
@@ -1607,6 +1609,8 @@ function renderResult(student,seat){
   $('ortu-pos').innerHTML=`<strong>Ikhwan: Blok ${pp.blokAyah} · Akhwat: Blok ${pp.blokIbu} · Baris ${pp.row}</strong>Kursi ke-${pp.colFromRight} dari kanan`;
   $('card-wisu').style.display='block';$('card-ortu').style.display='block';
   buildWisuSVG(selectedHari,seat);buildOrtuSVG(selectedHari,seat);
+  // Tampilkan additional seat setelah card-ortu muncul
+  asInit(selectedHari);
   setTimeout(()=>$('info-card-s').scrollIntoView({behavior:'smooth',block:'nearest'}),100);
 }
 
@@ -1817,7 +1821,7 @@ document.querySelectorAll('input,select').forEach(el=>{
 // ═══════════════════════════════════════════
 //  ADDITIONAL SEAT
 // ═══════════════════════════════════════════
-const AS_GAS_URL    = 'https://script.google.com/macros/s/AKfycbywNdXYp5fomrBvwRTO-J4pJzDgVAvEbVlQt3-0BBpUqhyuRSRg5gF7qdLlkXzwH3Hy/exec'; // sama dengan GAS_URL utama (V5)
+const AS_GAS_URL    = 'https://script.google.com/macros/s/AKfycbxThZHUp7BnDJYv9efMXNHGzM6zkfpt5FheBkMKUmkDsu42yu5DEGfEo5a7mdPmF4T3/exec'; // sama dengan GAS_URL utama (V5)
 const AS_WA_PANITIA = '6281281898982';
 const AS_HARGA      = 250000;
 const AS_MAX_AYAH   = 100;
@@ -1847,13 +1851,17 @@ function asInit(hari) {
 async function asFetch(h) {
   try {
     if(AS_GAS_URL==='YOUR_GAS_ADDITIONAL_URL') throw new Error('mock');
-    const r=await fetch(`${AS_GAS_URL}?action=getAdditionalSeats&hari=${h}`);
-    const d=await r.json();
+    const r=await fetch(`${AS_GAS_URL}?action=getAdditionalSeats&hari=${h}`,{
+      redirect:'follow',
+      mode:'cors'
+    });
+    const text=await r.text();
+    const d=JSON.parse(text);
     if(d.status!=='success') throw new Error(d.message||'error');
-    // Format response GAS ke format internal
     asData[h]={ayah:d.ayah||[],ibu:d.ibu||[]};
+    Logger && console.log('[AS] Fetch H'+h+' berhasil: ayah='+d.ayah.length+' ibu='+d.ibu.length);
   } catch(e) {
-    // Fallback ke data uji coba jika GAS belum tersedia
+    console.warn('[AS] Fallback mock H'+h+':', e.message);
     asData[h]=AS_MOCK[h];
   }
   asUpdateUI(h);
@@ -1865,11 +1873,8 @@ function asUpdateUI(h) {
   const bA=d.ayah.length, bI=d.ibu.length;
   const sA=AS_MAX_AYAH-bA, sI=AS_MAX_IBU-bI;
 
-  $('as-kuota-row').style.display   = 'flex';
-  $('as-legend-row').style.display  = 'flex';
-  $('as-hint').style.display        = 'block';
-  $('as-svg-sc').style.display      = 'block';
-  $('as-refresh-row').style.display = 'flex';
+  // Tampilkan card additional seat
+  $('card-as').style.display='block';
 
   $('as-sisa-ayah').textContent = sA+' tersedia';
   $('as-sisa-ibu').textContent  = sI+' tersedia';
@@ -1882,7 +1887,7 @@ function asUpdateUI(h) {
   $('as-btn-pesan').style.display   = (!ditutup&&!penuh)?'flex':'none';
   $('as-btn-ditutup').style.display = ditutup?'flex':'none';
   $('as-btn-penuh').style.display   = (!ditutup&&penuh)?'flex':'none';
-  if(ditutup) $('as-closed-notice').classList.add('on');
+  if(ditutup) $('as-closed-notice') && $('as-closed-notice').classList.add('on');
 
   asBuildSVG(h);
 
