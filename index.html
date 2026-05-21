@@ -1850,19 +1850,14 @@ function asInit(hari) {
 // Fetch data dari GAS (dengan fallback mock saat GAS belum tersedia)
 async function asFetch(h) {
   try {
-    if(AS_GAS_URL==='YOUR_GAS_ADDITIONAL_URL') throw new Error('mock');
-    const r=await fetch(`${AS_GAS_URL}?action=getAdditionalSeats&hari=${h}`,{
-      redirect:'follow',
-      mode:'cors'
-    });
-    const text=await r.text();
-    const d=JSON.parse(text);
-    if(d.status!=='success') throw new Error(d.message||'error');
-    asData[h]={ayah:d.ayah||[],ibu:d.ibu||[]};
-    Logger && console.log('[AS] Fetch H'+h+' berhasil: ayah='+d.ayah.length+' ibu='+d.ibu.length);
+    const r = await fetch(`${AS_GAS_URL}?action=getAdditionalSeats&hari=${h}`);
+    const d = await r.json();
+    if(d.status !== 'success') throw new Error(d.message || 'error');
+    asData[h] = {ayah: d.ayah || [], ibu: d.ibu || []};
+    console.log('[AS] Data H'+h+': ayah='+asData[h].ayah.length+' ibu='+asData[h].ibu.length);
   } catch(e) {
-    console.warn('[AS] Fallback mock H'+h+':', e.message);
-    asData[h]=AS_MOCK[h];
+    console.error('[AS] Fetch gagal H'+h+':', e);
+    asData[h] = {ayah: [], ibu: []};
   }
   asUpdateUI(h);
 }
@@ -2112,45 +2107,32 @@ async function asSubmit(){
   const jml=parseInt($('as-sel-jml').value);
   const genders=[];
   for(let i=1;i<=jml;i++){const g=document.querySelector(`input[name="asg${i}"]:checked`);genders.push(g?g.value:'');}
-  const laki=genders.filter(g=>g==='Laki-laki').length, wanita=genders.filter(g=>g==='Perempuan').length;
   const nama=$('as-inp-nama').value.trim(), kursi=$('as-inp-kursi').value.trim(), wa=$('as-inp-wa').value.trim();
 
   let noPesan='', assAyah=[], assIbu=[], linkBukti='';
 
   try {
-    if(AS_GAS_URL!=='YOUR_GAS_ADDITIONAL_URL') {
-      // POST ke GAS real
-      const body=new URLSearchParams({
-        action         : 'additionalSeat',
-        nama_wisudawan : nama,
-        nomor_kursi    : kursi,
-        hari           : asPopupHari,
-        jumlah         : jml,
-        no_wa          : wa,
-        gender_1       : genders[0]||'',
-        gender_2       : genders[1]||'',
-        gender_3       : genders[2]||'',
-        file_base64    : asFileData.base64,
-        file_name      : asFileData.name,
-        file_type      : asFileData.type
-      });
-      const r=await fetch(AS_GAS_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
-      const d=await r.json();
-      if(d.status!=='success') throw new Error(d.message||'Gagal mengirim pesanan.');
-      noPesan  = d.nomorPemesanan;
-      assAyah  = d.assignedAyah||[];
-      assIbu   = d.assignedIbu||[];
-      linkBukti = d.linkBukti||'';
-    } else {
-      // Simulasi saat GAS belum tersedia
-      await new Promise(r=>setTimeout(r,1500));
-      const d=asData[asPopupHari];
-      const bA=d.ayah.length, bI=d.ibu.length;
-      for(let i=0;i<laki;i++) assAyah.push(bA+i+1);
-      for(let i=0;i<wanita;i++) assIbu.push(bI+i+1);
-      noPesan=`AS-H${asPopupHari}-${String(bA+bI+1).padStart(3,'0')}`;
-      linkBukti='';
-    }
+    const body=new URLSearchParams({
+      action         : 'additionalSeat',
+      nama_wisudawan : nama,
+      nomor_kursi    : kursi,
+      hari           : asPopupHari,
+      jumlah         : jml,
+      no_wa          : wa,
+      gender_1       : genders[0]||'',
+      gender_2       : genders[1]||'',
+      gender_3       : genders[2]||'',
+      file_base64    : asFileData.base64,
+      file_name      : asFileData.name,
+      file_type      : asFileData.type
+    });
+    const r=await fetch(AS_GAS_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
+    const d=await r.json();
+    if(d.status!=='success') throw new Error(d.message||'Gagal mengirim pesanan.');
+    noPesan   = d.nomorPemesanan;
+    assAyah   = d.assignedAyah||[];
+    assIbu    = d.assignedIbu||[];
+    linkBukti = d.linkBukti||'';
   } catch(err) {
     showToast('❌ '+err.message,4000);
     btn.classList.remove('loading');btn.disabled=false;asSubmitting=false;return;
@@ -2191,38 +2173,6 @@ function asKirimWA(){
   window.open(`https://wa.me/${AS_WA_PANITIA}?text=${msg}`,'_blank');
 }
 
-// DATA UJI COBA (dipakai saat GAS_URL masih placeholder)
-const AS_MOCK={
-  1:{
-    ayah:[
-      {urut:1,kursiWisu:15,nama:'AHMAD ZAID',status:'booked'},
-      {urut:2,kursiWisu:28,nama:'UMAR FARUQ',status:'booked'},
-      {urut:3,kursiWisu:7,nama:'IBRAHIM K.',status:'booked'},
-      {urut:15,kursiWisu:120,nama:'YUSUF AL-AMIN',status:'booked'},
-      {urut:16,kursiWisu:177,nama:'BILAL IBN R.',status:'hold'},
-      {urut:29,kursiWisu:200,nama:'AISYAH B.',status:'booked'},
-    ],
-    ibu:[
-      {urut:1,kursiWisu:15,nama:'AHMAD ZAID',status:'booked'},
-      {urut:2,kursiWisu:7,nama:'IBRAHIM K.',status:'booked'},
-      {urut:15,kursiWisu:120,nama:'YUSUF AL-AMIN',status:'hold'},
-      {urut:29,kursiWisu:55,nama:'KHADIJAH B.',status:'booked'},
-    ]
-  },
-  2:{
-    ayah:[
-      {urut:1,kursiWisu:42,nama:'FATIMAH AZ.',status:'booked'},
-      {urut:2,kursiWisu:55,nama:'KHADIJAH B.',status:'booked'},
-      {urut:15,kursiWisu:88,nama:'MARYAM B.',status:'hold'},
-    ],
-    ibu:[
-      {urut:1,kursiWisu:42,nama:'FATIMAH AZ.',status:'booked'},
-      {urut:2,kursiWisu:88,nama:'MARYAM B.',status:'booked'},
-      {urut:15,kursiWisu:63,nama:'SALMAN F.',status:'hold'},
-      {urut:16,kursiWisu:55,nama:'KHADIJAH B.',status:'booked'},
-    ]
-  }
-};
 
 // ─ START ─
 preloadRundown();
