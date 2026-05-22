@@ -1400,8 +1400,13 @@ $('sel-cabang').addEventListener('change',()=>{
   if(!v){$('sel-jenjang').innerHTML='<option value="">— Pilih cabang terlebih dahulu —</option>';$('sel-jenjang').disabled=true;$('inp-nama').disabled=true;return;}
   const set={};
   allStudents.forEach(s=>{if(s.cabang===v)set[s.jenjang]=true;});
+  const urutanJenjang=['SD','SMP','SMA'];
+  const sortedJenjang=Object.keys(set).sort((a,b)=>{
+    const iA=urutanJenjang.indexOf(a); const iB=urutanJenjang.indexOf(b);
+    return (iA===-1?99:iA)-(iB===-1?99:iB);
+  });
   $('sel-jenjang').innerHTML='<option value="">— Pilih Jenjang —</option>';
-  Object.keys(set).sort().forEach(j=>{const o=document.createElement('option');o.value=o.textContent=j;$('sel-jenjang').appendChild(o);});
+  sortedJenjang.forEach(j=>{const o=document.createElement('option');o.value=o.textContent=j;$('sel-jenjang').appendChild(o);});
   $('sel-jenjang').disabled=false; $('inp-nama').disabled=true;
 });
 
@@ -1833,7 +1838,7 @@ document.querySelectorAll('input,select').forEach(el=>{
 // ═══════════════════════════════════════════
 //  ADDITIONAL SEAT
 // ═══════════════════════════════════════════
-const AS_GAS_URL    = 'https://script.google.com/macros/s/AKfycbwSQq9HHd2oFp0lYPvfyvVU06Z48rihxqvHNdBY8Xx97Lgkx0zCIzapDLw8nPFVs4Nw/exec'; // sama dengan GAS_URL utama
+const AS_GAS_URL    = 'https://script.google.com/macros/s/AKfycbwSQq9HHd2oFp0lYPvfyvVU06Z48rihxqvHNdBY8Xx97Lgkx0zCIzapDLw8nPFVs4Nw/exec'; // sama dengan GAS_URL utama (V5)
 const AS_WA_PANITIA = '6281281898982';
 const AS_HARGA      = 250000;
 const AS_MAX_AYAH   = 100;
