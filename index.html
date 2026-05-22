@@ -1283,7 +1283,7 @@
 // ═══════════════════════════════════════════
 //  CONFIG
 // ═══════════════════════════════════════════
-const GAS_URL = 'https://script.google.com/macros/s/AKfycby74hCHt6S9F6ahkmQuQjaNnh09dDHrJ-1DX468w-bV9V2iiRQxwsbf5qf1dD9bGp43/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxuCEMiflnZ8W410BCXw2DcO54rAUCaZAwYzr3HFQdhEtpfinu4PblG6tzEMBnnYK7O/exec';
 
 // ─ SEATING CONFIG ─
 const BLOK = {
@@ -1833,7 +1833,7 @@ document.querySelectorAll('input,select').forEach(el=>{
 // ═══════════════════════════════════════════
 //  ADDITIONAL SEAT
 // ═══════════════════════════════════════════
-const AS_GAS_URL    = 'https://script.google.com/macros/s/AKfycby74hCHt6S9F6ahkmQuQjaNnh09dDHrJ-1DX468w-bV9V2iiRQxwsbf5qf1dD9bGp43/exec'; // sama dengan GAS_URL utama
+const AS_GAS_URL    = 'https://script.google.com/macros/s/AKfycbxuCEMiflnZ8W410BCXw2DcO54rAUCaZAwYzr3HFQdhEtpfinu4PblG6tzEMBnnYK7O/exec'; // sama dengan GAS_URL utama
 const AS_WA_PANITIA = '6281281898982';
 const AS_HARGA      = 250000;
 const AS_MAX_AYAH   = 100;
@@ -1993,6 +1993,12 @@ function asPopupPilihHari(h){
   // Reset nama/kursi jika hari berganti
   $('as-inp-kursi').value='';$('as-inp-nama').value='';
   $('as-inp-nama').classList.remove('as-autofilled');
+  $('as-warn-limit').style.display='none';
+  $('as-btn-kirim').disabled=false;
+  $('as-sel-jml').disabled=false;
+  // Reset semua opsi dropdown jumlah
+  for(let i=1;i<=3;i++){const o=$('as-sel-jml').querySelector(`option[value="${i}"]`);if(o)o.disabled=false;}
+  $('as-sel-jml').value='';asOnJmlChange();
 }
 
 function asUpdatePopupKuota(h){
@@ -2003,17 +2009,74 @@ function asUpdatePopupKuota(h){
   $('as-popup-sisa-ibu').textContent=sI+' tersedia';
 }
 
-// Auto-fill nama ↔ kursi
+// Auto-fill nama ↔ kursi + cek limit per wisudawan
+let asCekTimer=null;
 function asOnKursiInput(){
   const val=parseInt($('as-inp-kursi').value);
-  if(!val){$('as-inp-nama').value='';$('as-inp-nama').classList.remove('as-autofilled');return;}
-  // Filter berdasarkan hari jika sudah dipilih
+  $('as-inp-nama').value='';$('as-inp-nama').classList.remove('as-autofilled');
+  $('as-warn-limit') && ($('as-warn-limit').style.display='none');
+  $('as-btn-kirim').disabled=false;
+
+  if(!val){return;}
+
+  // Auto-fill nama
   const src=asPopupHari ? allStudents.filter(s=>s.hari===asPopupHari) : allStudents;
   const s=src.find(x=>parseInt(x.nomorKursi)===val);
   if(s){$('as-inp-nama').value=s.nama;$('as-inp-nama').classList.add('as-autofilled');$('as-err-kursi').classList.remove('on');$('as-inp-kursi').classList.remove('bad');}
-  else{$('as-inp-nama').value='';$('as-inp-nama').classList.remove('as-autofilled');}
+
+  // Cek limit setelah jeda 600ms (debounce)
+  clearTimeout(asCekTimer);
+  asCekTimer=setTimeout(()=>asCekLimitWisudawan(val),600);
 }
 
+// Cek limit 3 kursi per wisudawan via GAS
+async function asCekLimitWisudawan(noKursi) {
+  if(!asPopupHari || !noKursi) return;
+  try {
+    const r=await fetch(`${AS_GAS_URL}?action=cekLimitWisudawan&hari=${asPopupHari}&nomor_kursi=${noKursi}`);
+    const d=await r.json();
+    if(d.status==='limit') {
+      asTampilWarnLimit(d.totalPesan, d.sisaBisa, d.message);
+    } else {
+      // Masih bisa pesan — update sisa yang bisa dipesan di dropdown
+      asUpdateDropdownJml(d.sisaBisa);
+    }
+  } catch(e) {
+    console.warn('[AS] Cek limit gagal:', e);
+  }
+}
+
+function asTampilWarnLimit(totalPesan, sisaBisa, pesan) {
+  const warn=$('as-warn-limit');
+  if(!warn) return;
+  warn.style.display='flex';
+  warn.innerHTML=`
+    <div style="font-size:20px;flex-shrink:0">⚠️</div>
+    <div>
+      <div style="font-size:13px;font-weight:700;color:#fca5a5;margin-bottom:3px;">Batas Maksimum Tercapai</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;">${pesan}</div>
+    </div>`;
+  // Disable tombol kirim dan jumlah jika sudah penuh
+  if(sisaBisa<=0){
+    $('as-btn-kirim').disabled=true;
+    $('as-sel-jml').disabled=true;
+  } else {
+    asUpdateDropdownJml(sisaBisa);
+  }
+}
+
+function asUpdateDropdownJml(maks) {
+  const sel=$('as-sel-jml');
+  // Sembunyikan opsi yang melebihi sisa
+  for(let i=1;i<=3;i++){
+    const opt=sel.querySelector(`option[value="${i}"]`);
+    if(opt) opt.disabled=(i>maks);
+  }
+  // Jika pilihan saat ini melebihi maks, reset
+  const cur=parseInt(sel.value)||0;
+  if(cur>maks){sel.value='';asOnJmlChange();}
+  sel.disabled=false;
+}
 function asOnNamaInput(){
   $('as-inp-nama').classList.remove('as-autofilled');$('as-inp-kursi').value='';
   const q=$('as-inp-nama').value.trim().toLowerCase();if(q.length<3){asCloseSug();return;}
@@ -2210,7 +2273,7 @@ initApp();
 
       <!-- INFO BANNER -->
       <div style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.18);border-radius:var(--r-sm);padding:12px 14px;display:flex;flex-direction:column;gap:7px;">
-        <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">💺 <span>Tersedia <strong style="color:var(--gold)">200 kursi tambahan per hari</strong> (100 Ikhwan · 100 Akhwat)</span></div>
+        <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">💺 <span>Tersedia <strong style="color:var(--gold)">200 kursi tambahan per hari</strong> (100 Ayah · 100 Ibu)</span></div>
         <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">💰 <span>Biaya <strong style="color:var(--gold)">Rp250.000 per kursi</strong> · Maksimum <strong style="color:var(--gold)">3 kursi</strong> per keluarga</span></div>
         <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">📍 <span>Kursi berada di <strong style="color:var(--gold)">baris paling akhir (area belakang)</strong></span></div>
         <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">📅 <span>Batas pendaftaran: <strong style="color:var(--gold)">26–30 Mei 2026</strong></span></div>
@@ -2250,6 +2313,8 @@ initApp();
           <label>Nomor Kursi Wisudawan *</label>
           <input type="number" id="as-inp-kursi" inputmode="numeric" placeholder="Masukkan nomor kursi wisudawan..." oninput="asOnKursiInput()">
           <div class="as-err" id="as-err-kursi">Nomor kursi wajib diisi.</div>
+          <!-- Warning limit per wisudawan -->
+          <div id="as-warn-limit" style="display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:var(--r-sm);padding:10px 12px;margin-top:8px;display:none;align-items:flex-start;gap:10px;"></div>
         </div>
 
         <div class="as-fg">
