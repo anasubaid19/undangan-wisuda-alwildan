@@ -1935,25 +1935,27 @@ function asBuildSVG(h) {
   s+=`<line x1="${xD+blokW+INNER/2}" y1="${LABLH+2}" x2="${xD+blokW+INNER/2}" y2="${totalH-4}" stroke="#1e3a5f" stroke-width=".8" opacity=".15"/>`;
   s+=`<line x1="${xB+blokW+INNER/2}" y1="${LABLH+2}" x2="${xB+blokW+INNER/2}" y2="${totalH-4}" stroke="#1e3a5f" stroke-width=".8" opacity=".15"/>`;
 
-  // Gambar 100 kursi FIFO kanan→kiri
-  const TOTAL=100,GROUP=28;
-  for(let urut=1;urut<=TOTAL;urut++){
-    const grup=Math.ceil(urut/GROUP),posG=((urut-1)%GROUP)+1,row=grup-1,y=LABLH+PAD+row*AS_U;
+  // 100 kursi dibagi 4 blok masing-masing 25 kursi
+  // Urut 1-25   → Blok A (kanan)
+  // Urut 26-50  → Blok B
+  // Urut 51-75  → Blok C
+  // Urut 76-100 → Blok D (kiri)
+  // Per blok: 1 baris 14 + 1 baris 11 (kanan→kiri)
+  const SEATS_PER_BLOK = 25;
+  for(let urut=1;urut<=100;urut++){
+    const blokIdx  = Math.floor((urut-1) / SEATS_PER_BLOK); // 0=A,1=B,2=C,3=D
+    const posInBlok = ((urut-1) % SEATS_PER_BLOK) + 1;      // 1-25
+    const row      = Math.floor((posInBlok-1) / AS_COLS);    // baris 0 atau 1
+    const col      = AS_COLS - 1 - ((posInBlok-1) % AS_COLS); // kanan→kiri
+    const y        = LABLH+PAD+row*AS_U;
+
+    const blokX = [xA, xB, xC, xD][blokIdx];
+
     const b=allBooked[urut]||null;
     let fill='#b8c9de',attr='';
     if(b){fill=b.status==='hold'?'#f59e0b':'#ef4444';attr=` data-u="${urut}" data-w="${b.kursiWisu}" data-n="${b.nama}" data-s="${b.status}"`;}
-    let rect=`<rect x="{X}" y="${y}" width="${AS_SW}" height="${AS_SH}" rx="2" fill="${fill}"${attr}/>`;
-    if(b) rect+=`<text x="{XC}" y="${y+AS_SH-2.5}" text-anchor="middle" fill="white" font-size="5" font-weight="800" font-family="Plus Jakarta Sans,sans-serif" pointer-events="none">${urut}</text>`;
-
-    if(posG<=AS_COLS){
-      const col=AS_COLS-posG;
-      s+=rect.replaceAll('{X}',xC+col*AS_U).replaceAll('{XC}',xC+col*AS_U+AS_SW/2);
-      s+=rect.replaceAll('{X}',xA+col*AS_U).replaceAll('{XC}',xA+col*AS_U+AS_SW/2);
-    } else {
-      const p2=posG-AS_COLS,col=AS_COLS-p2;
-      s+=rect.replaceAll('{X}',xD+col*AS_U).replaceAll('{XC}',xD+col*AS_U+AS_SW/2);
-      s+=rect.replaceAll('{X}',xB+col*AS_U).replaceAll('{XC}',xB+col*AS_U+AS_SW/2);
-    }
+    s+=`<rect x="${blokX+col*AS_U}" y="${y}" width="${AS_SW}" height="${AS_SH}" rx="2" fill="${fill}"${attr}/>`;
+    if(b) s+=`<text x="${blokX+col*AS_U+AS_SW/2}" y="${y+AS_SH-2.5}" text-anchor="middle" fill="white" font-size="5" font-weight="800" font-family="Plus Jakarta Sans,sans-serif" pointer-events="none">${urut}</text>`;
   }
 
   // Border per blok
