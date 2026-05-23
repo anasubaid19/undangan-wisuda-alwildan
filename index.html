@@ -1084,17 +1084,11 @@
         <!-- KUOTA -->
         <div style="padding:0 14px 4px">
           <div class="as-kuota-row" id="as-kuota-row">
-            <div class="as-kuota-chip ayah">
-              <div class="as-kc-lbl">🟢 Zona Ikhwan</div>
-              <div class="as-kc-val" id="as-sisa-ayah">—</div>
-              <div class="as-kc-sub" id="as-sub-ayah">dari 100 kursi</div>
-              <div class="as-kc-bar"><div class="as-kc-fill" id="as-bar-ayah" style="width:100%"></div></div>
-            </div>
-            <div class="as-kuota-chip ibu">
-              <div class="as-kc-lbl">🔴 Zona Akhwat</div>
-              <div class="as-kc-val" id="as-sisa-ibu">—</div>
-              <div class="as-kc-sub" id="as-sub-ibu">dari 100 kursi</div>
-              <div class="as-kc-bar"><div class="as-kc-fill" id="as-bar-ibu" style="width:100%"></div></div>
+            <div class="as-kuota-chip" style="background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);flex:1">
+              <div class="as-kc-lbl" style="color:#818cf8">🪑 Kursi Tambahan</div>
+              <div class="as-kc-val" id="as-sisa-total">—</div>
+              <div class="as-kc-sub" id="as-sub-total">dari 100 kursi</div>
+              <div class="as-kc-bar"><div class="as-kc-fill" id="as-bar-total" style="width:100%;background:#6366f1"></div></div>
             </div>
           </div>
         </div>
@@ -1283,7 +1277,7 @@
 // ═══════════════════════════════════════════
 //  CONFIG
 // ═══════════════════════════════════════════
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwSQq9HHd2oFp0lYPvfyvVU06Z48rihxqvHNdBY8Xx97Lgkx0zCIzapDLw8nPFVs4Nw/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwfGmw5n7f96BlPWWgB7jLZ4lDCR0ehgHeGxSAZ6jvFXBwlatffCkq8MvZWh8l6pYXW/exec';
 
 // ─ SEATING CONFIG ─
 const BLOK = {
@@ -1838,10 +1832,11 @@ document.querySelectorAll('input,select').forEach(el=>{
 // ═══════════════════════════════════════════
 //  ADDITIONAL SEAT
 // ═══════════════════════════════════════════
-const AS_GAS_URL    = 'https://script.google.com/macros/s/AKfycbwSQq9HHd2oFp0lYPvfyvVU06Z48rihxqvHNdBY8Xx97Lgkx0zCIzapDLw8nPFVs4Nw/exec'; // sama dengan GAS_URL utama (V5)
+const AS_GAS_URL    = 'https://script.google.com/macros/s/AKfycbwfGmw5n7f96BlPWWgB7jLZ4lDCR0ehgHeGxSAZ6jvFXBwlatffCkq8MvZWh8l6pYXW/exec'; // sama dengan GAS_URL utama (V5)
 const AS_WA_PANITIA = '6281281898982';
 const AS_HARGA      = 250000;
-const AS_MAX_AYAH   = 100;
+const AS_MAX_KURSI  = 100; // total kursi/hari tanpa pembedaan gender
+const AS_MAX_AYAH   = 100; // tetap ada untuk kompatibilitas GAS
 const AS_MAX_IBU    = 100;
 const AS_COLS       = 14;
 const AS_HOLD_MIN   = 10;
@@ -1882,20 +1877,19 @@ async function asFetch(h) {
 // Update UI kuota + SVG di tab denah
 function asUpdateUI(h) {
   const d=asData[h];
-  const bA=d.ayah.length, bI=d.ibu.length;
-  const sA=AS_MAX_AYAH-bA, sI=AS_MAX_IBU-bI;
+  // Gabungkan ayah + ibu jadi 1 kuota total
+  const totalBooked = d.ayah.length + d.ibu.length;
+  const sisa        = AS_MAX_KURSI - totalBooked;
 
   // Tampilkan card additional seat
   $('card-as').style.display='block';
 
-  $('as-sisa-ayah').textContent = sA+' tersedia';
-  $('as-sisa-ibu').textContent  = sI+' tersedia';
-  $('as-sub-ayah').textContent  = `${bA} dipesan dari ${AS_MAX_AYAH}`;
-  $('as-sub-ibu').textContent   = `${bI} dipesan dari ${AS_MAX_IBU}`;
-  $('as-bar-ayah').style.width  = (sA/AS_MAX_AYAH*100)+'%';
-  $('as-bar-ibu').style.width   = (sI/AS_MAX_IBU*100)+'%';
+  // Update kuota card tunggal
+  $('as-sisa-total').textContent = sisa+' tersedia';
+  $('as-sub-total').textContent  = `${totalBooked} dipesan dari ${AS_MAX_KURSI} kursi`;
+  $('as-bar-total').style.width  = (sisa/AS_MAX_KURSI*100)+'%';
 
-  const ditutup=new Date()>AS_BATAS, penuh=sA<=0&&sI<=0;
+  const ditutup=new Date()>AS_BATAS, penuh=sisa<=0;
   $('as-btn-pesan').style.display   = (!ditutup&&!penuh)?'flex':'none';
   $('as-btn-ditutup').style.display = ditutup?'flex':'none';
   $('as-btn-penuh').style.display   = (!ditutup&&penuh)?'flex':'none';
@@ -1903,51 +1897,75 @@ function asUpdateUI(h) {
 
   asBuildSVG(h);
 
-  // Update kuota mini di popup jika hari sama
+  // Update kuota mini di popup
   if(asPopupHari===h) asUpdatePopupKuota(h);
 }
 
 // SVG Peta Kursi Tambahan
 function asBuildSVG(h) {
-  const d=asData[h]; const aMap={},iMap={};
-  d.ayah.forEach(b=>aMap[b.urut]=b); d.ibu.forEach(b=>iMap[b.urut]=b);
-  const blokW=AS_COLS*AS_U,PAD=10,LABLH=36,INNER=14,DIVGAP=22;
+  const d=asData[h];
+  // Gabungkan semua kursi (ayah+ibu) jadi 1 pool urut
+  const allBooked={};
+  d.ayah.forEach(b=>{ if(!allBooked[b.urut]) allBooked[b.urut]=b; });
+  d.ibu.forEach(b=>{  if(!allBooked[b.urut]) allBooked[b.urut]=b; });
+
+  const C_ZONE='#6366f1';
+  const blokW=AS_COLS*AS_U,PAD=10,LABLH=42,INNER=14,DIVGAP=22;
   const zoneW=blokW+INNER+blokW,NR=4;
   const totalH=LABLH+NR*AS_U+PAD*2,totalW=PAD+zoneW+DIVGAP+zoneW+PAD;
   const xD=PAD,xC=PAD+blokW+INNER,xB=PAD+zoneW+DIVGAP,xA=xB+blokW+INNER;
-  let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${totalW}" height="${totalH}" viewBox="0 0 ${totalW} ${totalH}" style="background:${AS_CBG};border-radius:8px" id="as-svg">`;
-  s+=`<rect x="${PAD-2}" y="0" width="${zoneW+4}" height="${LABLH}" rx="4" fill="${AS_CAYAH}18"/>`;
-  s+=`<rect x="${xB-2}" y="0" width="${zoneW+4}" height="${LABLH}" rx="4" fill="${AS_CIBU}18"/>`;
+
+  let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${totalW}" height="${totalH}" viewBox="0 0 ${totalW} ${totalH}" style="background:#f1f5f9;border-radius:8px" id="as-svg">`;
+
+  // 1 zona header mencakup semua 4 blok
+  s+=`<rect x="${PAD-2}" y="0" width="${totalW-PAD*2+4}" height="${LABLH}" rx="4" fill="${C_ZONE}15"/>`;
+  s+=`<text x="${totalW/2}" y="18" text-anchor="middle" fill="${C_ZONE}" font-size="12" font-family="Plus Jakarta Sans,sans-serif" font-weight="800">🪑 ZONA KURSI TAMBAHAN</text>`;
+  s+=`<text x="${totalW/2}" y="33" text-anchor="middle" fill="${C_ZONE}" font-size="8" font-family="Plus Jakarta Sans,sans-serif" font-weight="600" opacity=".7">Area Belakang · 100 Kursi/Hari</text>`;
+
+  // Blok labels
   const t=(x,y,c,fill,sz,w,op=1)=>`<text x="${x}" y="${y}" text-anchor="middle" fill="${fill}" font-size="${sz}" font-family="Plus Jakarta Sans,sans-serif" font-weight="${w}" opacity="${op}">${c}</text>`;
-  s+=t(PAD+zoneW/2,15,'🟢 IKHWAN',AS_CAYAH,11,800)+t(PAD+zoneW/2,28,'Sisi Kiri Panggung',AS_CAYAH,8,600,.8);
-  s+=t(xB+zoneW/2,15,'🔴 AKHWAT',AS_CIBU,11,800)+t(xB+zoneW/2,28,'Sisi Kanan Panggung',AS_CIBU,8,600,.8);
-  s+=t(xD+blokW/2,28,'BLOK D',AS_CAYAH,7,700,.55)+t(xC+blokW/2,28,'BLOK C',AS_CAYAH,7,700,.55);
-  s+=t(xB+blokW/2,28,'BLOK B',AS_CIBU,7,700,.55)+t(xA+blokW/2,28,'BLOK A',AS_CIBU,7,700,.55);
+  s+=t(xD+blokW/2,LABLH-5,'BLOK D',C_ZONE,7.5,700,.65);
+  s+=t(xC+blokW/2,LABLH-5,'BLOK C',C_ZONE,7.5,700,.65);
+  s+=t(xB+blokW/2,LABLH-5,'BLOK B',C_ZONE,7.5,700,.65);
+  s+=t(xA+blokW/2,LABLH-5,'BLOK A',C_ZONE,7.5,700,.65);
+
+  // Divider: 1 garis tengah tebal + 2 garis blok tipis
   const dX=PAD+zoneW+DIVGAP/2;
   s+=`<line x1="${dX}" y1="4" x2="${dX}" y2="${totalH-4}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3" opacity=".5"/>`;
-  s+=`<line x1="${xD+blokW+INNER/2}" y1="${LABLH+2}" x2="${xD+blokW+INNER/2}" y2="${totalH-4}" stroke="${AS_CT}" stroke-width=".8" opacity=".15"/>`;
-  s+=`<line x1="${xB+blokW+INNER/2}" y1="${LABLH+2}" x2="${xB+blokW+INNER/2}" y2="${totalH-4}" stroke="${AS_CT}" stroke-width=".8" opacity=".15"/>`;
+  s+=`<line x1="${xD+blokW+INNER/2}" y1="${LABLH+2}" x2="${xD+blokW+INNER/2}" y2="${totalH-4}" stroke="#1e3a5f" stroke-width=".8" opacity=".15"/>`;
+  s+=`<line x1="${xB+blokW+INNER/2}" y1="${LABLH+2}" x2="${xB+blokW+INNER/2}" y2="${totalH-4}" stroke="#1e3a5f" stroke-width=".8" opacity=".15"/>`;
+
+  // Gambar 100 kursi FIFO kanan→kiri
   const TOTAL=100,GROUP=28;
   for(let urut=1;urut<=TOTAL;urut++){
     const grup=Math.ceil(urut/GROUP),posG=((urut-1)%GROUP)+1,row=grup-1,y=LABLH+PAD+row*AS_U;
-    if(posG<=AS_COLS){const col=AS_COLS-posG;s+=asRect(xC+col*AS_U,y,urut,aMap[urut],'ayah');s+=asRect(xA+col*AS_U,y,urut,iMap[urut],'ibu');}
-    else{const p2=posG-AS_COLS,col=AS_COLS-p2;s+=asRect(xD+col*AS_U,y,urut,aMap[urut],'ayah');s+=asRect(xB+col*AS_U,y,urut,iMap[urut],'ibu');}
+    const b=allBooked[urut]||null;
+    let fill='#b8c9de',attr='';
+    if(b){fill=b.status==='hold'?'#f59e0b':'#ef4444';attr=` data-u="${urut}" data-w="${b.kursiWisu}" data-n="${b.nama}" data-s="${b.status}"`;}
+    let rect=`<rect x="{X}" y="${y}" width="${AS_SW}" height="${AS_SH}" rx="2" fill="${fill}"${attr}/>`;
+    if(b) rect+=`<text x="{XC}" y="${y+AS_SH-2.5}" text-anchor="middle" fill="white" font-size="5" font-weight="800" font-family="Plus Jakarta Sans,sans-serif" pointer-events="none">${urut}</text>`;
+
+    if(posG<=AS_COLS){
+      const col=AS_COLS-posG;
+      s+=rect.replaceAll('{X}',xC+col*AS_U).replaceAll('{XC}',xC+col*AS_U+AS_SW/2);
+      s+=rect.replaceAll('{X}',xA+col*AS_U).replaceAll('{XC}',xA+col*AS_U+AS_SW/2);
+    } else {
+      const p2=posG-AS_COLS,col=AS_COLS-p2;
+      s+=rect.replaceAll('{X}',xD+col*AS_U).replaceAll('{XC}',xD+col*AS_U+AS_SW/2);
+      s+=rect.replaceAll('{X}',xB+col*AS_U).replaceAll('{XC}',xB+col*AS_U+AS_SW/2);
+    }
   }
-  const bdr=(bx,by,bh)=>`<rect x="${bx-1}" y="${by-1}" width="${AS_COLS*AS_U+2}" height="${bh+2}" rx="4" fill="none" stroke="${AS_CT}22" stroke-width="1"/>`;
+
+  // Border per blok
   const bh=NR*AS_U;
-  s+=bdr(xD,LABLH+PAD,bh)+bdr(xC,LABLH+PAD,bh)+bdr(xB,LABLH+PAD,bh)+bdr(xA,LABLH+PAD,bh)+`</svg>`;
+  [xD,xC,xB,xA].forEach(bx=>{
+    s+=`<rect x="${bx-1}" y="${LABLH+PAD-1}" width="${AS_COLS*AS_U+2}" height="${bh+2}" rx="4" fill="none" stroke="#1e3a5f22" stroke-width="1"/>`;
+  });
+  s+=`</svg>`;
   $('as-svg-sc').innerHTML=s;
   const svg=$('as-svg');
   svg.addEventListener('click',asOnClick);svg.addEventListener('mousemove',asOnHover);
   svg.addEventListener('mouseleave',asHideTooltip);svg.addEventListener('touchstart',asOnTouch,{passive:true});
-}
-
-function asRect(x,y,urut,b,zona){
-  let fill=AS_CA,attr='';
-  if(b){fill=b.status==='hold'?AS_CH:AS_CB;attr=` data-u="${urut}" data-w="${b.kursiWisu}" data-n="${b.nama}" data-s="${b.status}" data-z="${zona}"`;}
-  let r=`<rect x="${x}" y="${y}" width="${AS_SW}" height="${AS_SH}" rx="2" fill="${fill}"${attr}/>`;
-  if(b) r+=`<text x="${x+AS_SW/2}" y="${y+AS_SH-2.5}" text-anchor="middle" fill="white" font-size="5" font-weight="800" font-family="Plus Jakarta Sans,sans-serif" pointer-events="none">${urut}</text>`;
-  return r;
 }
 
 // Tooltip
@@ -1957,8 +1975,7 @@ function asOnTouch(e){const r=e.target;if(!r.dataset.w){asHideTooltip();return;}
 function asShowTT(r,cx,cy){
   const tt=$('as-tt');
   const st=r.dataset.s==='hold'?'⏳ Sedang Direservasi':'🔴 Sudah Dipesan';
-  const zo=r.dataset.z==='ayah'?'🟢 Ikhwan':'🔴 Akhwat';
-  tt.innerHTML=`<strong>Kursi Tambahan #${r.dataset.u}</strong>${zo} · ${st}<br>Wisudawan: <span style="color:var(--gold)">${r.dataset.n}</span><br>No. Kursi: <span style="color:var(--gold)">${r.dataset.w}</span>`;
+  tt.innerHTML=`<strong>Kursi Tambahan #${r.dataset.u}</strong>${st}<br>Wisudawan: <span style="color:var(--gold)">${r.dataset.n}</span><br>No. Kursi: <span style="color:var(--gold)">${r.dataset.w}</span>`;
   tt.classList.add('on');const w=190;
   tt.style.left=(cx+14+w>window.innerWidth?cx-w-14:cx+14)+'px';tt.style.top=Math.max(8,cy-10)+'px';
 }
@@ -2008,10 +2025,10 @@ function asPopupPilihHari(h){
 
 function asUpdatePopupKuota(h){
   const d=asData[h]; if(!d) return;
-  const sA=AS_MAX_AYAH-d.ayah.length, sI=AS_MAX_IBU-d.ibu.length;
+  const totalBooked=d.ayah.length+d.ibu.length;
+  const sisa=AS_MAX_KURSI-totalBooked;
   $('as-popup-kuota').style.display='flex';
-  $('as-popup-sisa-ayah').textContent=sA+' tersedia';
-  $('as-popup-sisa-ibu').textContent=sI+' tersedia';
+  $('as-popup-sisa-total').textContent=sisa+' tersedia dari '+AS_MAX_KURSI+' kursi';
 }
 
 // Auto-fill nama ↔ kursi + cek limit per wisudawan
@@ -2302,14 +2319,10 @@ initApp();
         </div>
 
         <!-- KUOTA MINI -->
-        <div id="as-popup-kuota" style="display:none;gap:6px;flex-direction:row;">
-          <div style="flex:1;background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.2);border-radius:6px;padding:7px 10px;">
-            <div style="font-size:9px;font-weight:700;color:#059669;letter-spacing:.8px;text-transform:uppercase;">🟢 Zona Ikhwan</div>
-            <div style="font-size:14px;font-weight:900;color:var(--white)" id="as-popup-sisa-ayah">—</div>
-          </div>
-          <div style="flex:1;background:rgba(219,39,119,.1);border:1px solid rgba(219,39,119,.2);border-radius:6px;padding:7px 10px;">
-            <div style="font-size:9px;font-weight:700;color:#db2777;letter-spacing:.8px;text-transform:uppercase;">🔴 Zona Akhwat</div>
-            <div style="font-size:14px;font-weight:900;color:var(--white)" id="as-popup-sisa-ibu">—</div>
+        <div id="as-popup-kuota" style="display:none;">
+          <div style="background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);border-radius:6px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:10px;font-weight:700;color:#818cf8;letter-spacing:.8px;text-transform:uppercase;">🪑 Kuota Tersedia</div>
+            <div style="font-size:14px;font-weight:900;color:var(--white)" id="as-popup-sisa-total">—</div>
           </div>
         </div>
 
