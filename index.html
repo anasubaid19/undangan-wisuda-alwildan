@@ -1330,27 +1330,60 @@ async function initApp() {
   try {
     setProgress(10,'Menghubungkan ke server...');
     await sleep(200);
-    setProgress(30,'Mengambil data <span>siswa</span>...');
-    const r=await fetch(`${GAS_URL}?action=getAllStudents`);
-    setProgress(70,'Memproses data...');
-    const d=await r.json();
-    if(d.status!=='success'||!d.data.length) throw new Error('empty');
-    allStudents=d.data;
-    // build seat map
-    allStudents.forEach(s=>{seatMap[`${s.hari}-${parseInt(s.nomorKursi)}`]=s;});
-    // populate cabang
-    const set={};
-    allStudents.forEach(s=>{set[s.cabang]=true;});
-    const list=Object.keys(set).sort((a,b)=>(parseInt(a.replace(/\D/g,''))||0)-(parseInt(b.replace(/\D/g,''))||0));
-    $('sel-cabang').innerHTML='<option value="">— Pilih Cabang —</option>';
-    list.forEach(c=>{const o=document.createElement('option');o.value=o.textContent=c;$('sel-cabang').appendChild(o);});
-    $('sel-cabang').disabled=false;
-    setProgress(100,`✓ <span>${allStudents.length} data siswa</span> dimuat`);
+
+    // ── Cek cache localStorage ──────────────────────────────
+    const CACHE_KEY     = 'wisuda_students_v1';
+    const CACHE_EXPIRES = 24 * 60 * 60 * 1000; // 24 jam
+    let useCache = false;
+
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const { timestamp, data } = JSON.parse(cached);
+        if (Date.now() - timestamp < CACHE_EXPIRES && data && data.length) {
+          allStudents = data;
+          useCache = true;
+        }
+      }
+    } catch(cacheErr) { /* localStorage tidak tersedia, lanjut fetch */ }
+
+    if (useCache) {
+      setProgress(70,'Memuat dari cache...');
+    } else {
+      setProgress(30,'Mengambil data <span>siswa</span>...');
+      const r = await fetch(`${GAS_URL}?action=getAllStudents`);
+      setProgress(70,'Memproses data...');
+      const d = await r.json();
+      if (d.status !== 'success' || !d.data.length) throw new Error('empty');
+      allStudents = d.data;
+
+      // Simpan ke cache
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          timestamp : Date.now(),
+          data      : allStudents
+        }));
+      } catch(saveErr) { /* localStorage penuh, abaikan */ }
+    }
+
+    // Build seat map
+    allStudents.forEach(s => { seatMap[`${s.hari}-${parseInt(s.nomorKursi)}`] = s; });
+
+    // Populate cabang
+    const set = {};
+    allStudents.forEach(s => { set[s.cabang] = true; });
+    const list = Object.keys(set).sort((a,b) => (parseInt(a.replace(/\D/g,''))||0) - (parseInt(b.replace(/\D/g,''))||0));
+    $('sel-cabang').innerHTML = '<option value="">— Pilih Cabang —</option>';
+    list.forEach(c => { const o = document.createElement('option'); o.value = o.textContent = c; $('sel-cabang').appendChild(o); });
+    $('sel-cabang').disabled = false;
+
+    const src = useCache ? 'cache' : 'server';
+    setProgress(100, `✓ <span>${allStudents.length} data siswa</span> dimuat`);
     await sleep(500);
     $('loading-screen').classList.add('hide');
   } catch(e) {
     setProgress(100,'❌ Gagal memuat — <span>refresh halaman</span>');
-    $('ls-bar').style.background='#ef4444';
+    $('ls-bar').style.background = '#ef4444';
   }
 }
 
@@ -1833,14 +1866,14 @@ document.querySelectorAll('input,select').forEach(el=>{
 //  ADDITIONAL SEAT
 // ═══════════════════════════════════════════
 const AS_GAS_URL    = 'https://script.google.com/macros/s/AKfycbwfGmw5n7f96BlPWWgB7jLZ4lDCR0ehgHeGxSAZ6jvFXBwlatffCkq8MvZWh8l6pYXW/exec'; // sama dengan GAS_URL utama (V5)
-const AS_WA_PANITIA = '6281902420049';
+const AS_WA_PANITIA = '6281281898982';
 const AS_HARGA      = 250000;
 const AS_MAX_KURSI  = 100; // total kursi/hari tanpa pembedaan gender
 const AS_MAX_AYAH   = 100; // tetap ada untuk kompatibilitas GAS
 const AS_MAX_IBU    = 100;
 const AS_COLS       = 14;
 const AS_HOLD_MIN   = 10;
-const AS_REFRESH_S  = 30;
+const AS_REFRESH_S  = 120; // refresh setiap 2 menit (hemat kuota GAS)
 const AS_BATAS      = new Date('2026-05-30T23:59:59');
 const AS_SW=11,AS_SH=11,AS_SG=2,AS_U=AS_SW+AS_SG;
 const AS_CBG='#f1f5f9',AS_CT='#1e3a5f',AS_CA='#b8c9de',AS_CB='#ef4444',AS_CH='#f59e0b',AS_CAYAH='#059669',AS_CIBU='#db2777';
