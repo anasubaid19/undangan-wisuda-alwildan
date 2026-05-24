@@ -2164,7 +2164,7 @@ function asOnJmlChange(){
   const wrap=$('as-gender-wrap');wrap.innerHTML='';
   for(let i=1;i<=jml;i++){
     const row=document.createElement('div');row.className='as-gender-row';
-    row.innerHTML=`<span class="as-gender-lbl">Peserta ke-${i}</span><div class="as-gender-opts"><div class="as-g-opt"><input type="radio" name="asg${i}" id="aslk${i}" value="Laki-laki"><label for="aslk${i}" class="laki">Laki-laki</label></div><div class="as-g-opt"><input type="radio" name="asg${i}" id="aspr${i}" value="Perempuan"><label for="aspr${i}" class="perempuan">Perempuan</label></div></div>`;
+    row.innerHTML=`<span class="as-gender-lbl">Tamu ke-${i}</span><div class="as-gender-opts"><div class="as-g-opt"><input type="radio" name="asg${i}" id="aslk${i}" value="Laki-laki"><label for="aslk${i}" class="laki">Laki-laki</label></div><div class="as-g-opt"><input type="radio" name="asg${i}" id="aspr${i}" value="Perempuan"><label for="aspr${i}" class="perempuan">Perempuan</label></div></div>`;
     wrap.appendChild(row);
   }
 }
