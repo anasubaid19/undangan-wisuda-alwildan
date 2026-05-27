@@ -2182,10 +2182,13 @@ function asSalinRek(){
 // Unggah & kompresi
 function asHandleFile(input){
   const file=input.files[0];if(!file) return;
-  if(file.size>10*1024*1024){showToast('❌ Ukuran berkas terlalu besar (maks. 10MB)');return;}
+  if(!file.type.startsWith('image/')){
+    showToast('❌ Format tidak didukung. Gunakan JPG, PNG, atau WEBP.');
+    input.value='';return;
+  }
+  if(file.size>10*1024*1024){showToast('❌ Ukuran berkas terlalu besar (maks. 10MB)');input.value='';return;}
   $('as-upload-prog').style.display='block';$('as-upload-txt').textContent='Memproses berkas...';asAnimProg();
-  if(file.type.startsWith('image/')){asCompress(file,1024,.8,r=>{asFileData=r;asShowFile(r.name,(r.size/1024).toFixed(0),(file.size/1024).toFixed(0));});}
-  else{const rd=new FileReader();rd.onload=e=>{asFileData={base64:e.target.result,name:file.name,type:file.type,size:file.size};asShowFile(file.name,(file.size/1024).toFixed(0),null);};rd.readAsDataURL(file);}
+  asCompress(file,1024,.8,r=>{asFileData=r;asShowFile(r.name,(r.size/1024).toFixed(0),(file.size/1024).toFixed(0));});
 }
 function asCompress(file,maxPx,q,cb){
   const rd=new FileReader();rd.onload=e=>{const img=new Image();img.onload=()=>{
@@ -2453,10 +2456,10 @@ initApp();
         <div class="as-fg">
           <label>Bukti Pembayaran *</label>
           <div class="as-upload-area" id="as-upload-area">
-            <input type="file" id="as-inp-file" accept="image/*,.pdf" onchange="asHandleFile(this)">
+            <input type="file" id="as-inp-file" accept="image/jpeg,image/png,image/webp" onchange="asHandleFile(this)">
             <div class="as-upload-ic" id="as-upload-ic">📎</div>
             <div class="as-upload-txt" id="as-upload-txt">Ketuk untuk mengunggah bukti transfer</div>
-            <div class="as-upload-hint">JPG, PNG, PDF · Dioptimalkan otomatis · Maks. 10MB</div>
+            <div class="as-upload-hint">JPG / PNG / WEBP · Dioptimalkan otomatis · Maks. 10MB</div>
             <div class="as-upload-fname" id="as-upload-fname" style="display:none"></div>
             <div class="as-compress-info" id="as-compress-info" style="display:none"></div>
             <div class="as-upload-prog" id="as-upload-prog">
