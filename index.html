@@ -1918,8 +1918,9 @@ function asUpdateUI(h) {
   $('card-as').style.display='block';
 
   // Update kuota card tunggal
-  $('as-sisa-total').textContent = sisa+' tersedia';
-  $('as-sub-total').textContent  = `${totalBooked} dipesan dari ${AS_MAX_KURSI} kursi`;
+  const ditutupCek = new Date() > AS_BATAS;
+  $('as-sisa-total').textContent = ditutupCek ? totalBooked+' pendaftar' : sisa+' tersedia';
+  $('as-sub-total').textContent  = ditutupCek ? 'Pendaftaran telah ditutup' : `${totalBooked} dipesan dari ${AS_MAX_KURSI} kursi`;
   $('as-bar-total').style.width  = (sisa/AS_MAX_KURSI*100)+'%';
 
   const ditutup=new Date()>AS_BATAS, penuh=sisa<=0;
