@@ -1986,6 +1986,8 @@ function asBuildSVG(h) {
     const blokX = [xA, xB, xC, xD][blokIdx];
 
     const b=allBooked[urut]||null;
+    const _ditutup = new Date() > AS_BATAS;
+    if(_ditutup && !b) continue; // skip kursi kosong saat tutup
     let fill='#b8c9de',attr='';
     if(b){fill=b.status==='hold'?'#f59e0b':'#ef4444';attr=` data-u="${urut}" data-w="${b.kursiWisu}" data-n="${b.nama}" data-s="${b.status}"`;}
     s+=`<rect x="${blokX+col*AS_U}" y="${y}" width="${AS_SW}" height="${AS_SH}" rx="2" fill="${fill}"${attr}/>`;
